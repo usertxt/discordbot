@@ -12,10 +12,6 @@ async def on_ready():
     print('Bot is ready')
 
 @bot.command(pass_context=True)
-async def ping(ctx):
-    await ctx.send('Pong!')
-
-@bot.command(pass_context=True)
 async def price(ctx, ticker):
     response = requests.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=' + ticker)
     price = response.json()
