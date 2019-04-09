@@ -17,6 +17,8 @@ Windows:
  py -3 -m pip install -U discord.py
 ```
 
+### Configure
+
 Add your bot's token to:
 ```
 token = 'YOUR_TOKEN'
