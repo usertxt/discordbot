@@ -9,7 +9,7 @@ bot = commands.Bot(command_prefix = '!')
 
 @bot.event
 async def on_ready():
-    print('Bot is ready')
+    print('Bot is online')
 
 @bot.command(pass_context=True)
 async def price(ctx, ticker):
