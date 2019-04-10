@@ -5,12 +5,14 @@ import configparser
 config = configparser.ConfigParser()
 config.read("config.ini")
 token = config.get("config", "token")
-url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids='
-bot = commands.Bot(command_prefix='!')
+url = config.get("config", "url")
+bot = config.get("config", "bot")
+
 
 @bot.event
 async def on_ready():
     print('Bot is online')
+
 
 @bot.command(pass_context=True)
 async def price(ctx, ticker):
@@ -20,5 +22,6 @@ async def price(ctx, ticker):
     current_price = fetched[0]['current_price']
     formatted_price = '{0:,.4f}'.format(current_price)
     await ctx.send(symbol.upper() + '/USD: $' + str(formatted_price))
+
 
 bot.run(token)
