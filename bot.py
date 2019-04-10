@@ -6,7 +6,7 @@ config = configparser.ConfigParser()
 config.read("config.ini")
 token = config.get("config", "token")
 url = config.get("config", "url")
-bot = config.get("config", "bot")
+bot = commands.Bot(command_prefix='!')
 
 
 @bot.event
