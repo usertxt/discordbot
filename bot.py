@@ -2,7 +2,7 @@ from discord.ext import commands
 import requests
 
 token = 'YOUR_TOKEN'
-
+url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids='
 bot = commands.Bot(command_prefix='!')
 
 @bot.event
@@ -11,7 +11,7 @@ async def on_ready():
 
 @bot.command(pass_context=True)
 async def price(ctx, ticker):
-    response = requests.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=' + ticker)
+    response = requests.get(url + ticker)
     fetched = response.json()
     symbol = fetched[0]['symbol']
     current_price = fetched[0]['current_price']
