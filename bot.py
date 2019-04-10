@@ -1,7 +1,10 @@
 from discord.ext import commands
 import requests
+import configparser
 
-token = 'YOUR_TOKEN'
+config = configparser.ConfigParser()
+config.read("config.ini")
+token = config.get("config", "token")
 url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids='
 bot = commands.Bot(command_prefix='!')
 
