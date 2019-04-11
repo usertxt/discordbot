@@ -3,10 +3,10 @@ import requests
 import configparser
 
 config = configparser.ConfigParser()
-config.read("config.ini")
-default_fiat = config.get("user", "default_fiat")
-token = config.get("user", "token")
-url = config.get("app", "url")
+config.read('config.ini')
+default_fiat = config.get('user', 'default_fiat')
+token = config.get('user', 'token')
+url = config.get('app', 'url')
 bot = commands.Bot(command_prefix='!')
 
 
