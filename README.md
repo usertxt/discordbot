@@ -3,7 +3,7 @@ Simple Discord bot that uses CoinGecko's API to fetch cryptocurrency prices
 
 ## Installation
 
-### Install required packages
+**Install required packages**
 
 > Note: This app is written with the discord.py rewrite, some commands will not work on other versions. More information can be found here: https://discordpy.readthedocs.io/en/rewrite/migrating.html
 
