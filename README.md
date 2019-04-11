@@ -18,7 +18,7 @@ Windows:
  py -3 -m pip install -U discord.py
 ```
 
-### Configure
+## Configure
 
 Configure the app using **config.ini**
 
@@ -27,7 +27,7 @@ Add your bot's token to:
 token = 'YOUR_TOKEN'
 ```
 
-Set your default fiat currency with:
+Fiat is set to USD by default. Set your default fiat currency with:
 ```
 default_fiat = 'CURRENCY'
 ```
