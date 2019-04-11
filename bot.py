@@ -4,9 +4,9 @@ import configparser
 
 config = configparser.ConfigParser()
 config.read("config.ini")
-token = config.get("config", "token")
-url = config.get("config", "url")
-default_fiat = config.get("config", "default_fiat")
+default_fiat = config.get("user", "default_fiat")
+token = config.get("user", "token")
+url = config.get("app", "url")
 bot = commands.Bot(command_prefix='!')
 
 
