@@ -6,6 +6,7 @@ config = configparser.ConfigParser()
 config.read("config.ini")
 token = config.get("config", "token")
 url = config.get("config", "url")
+default_fiat = config.get("config", "default_fiat")
 bot = commands.Bot(command_prefix='!')
 
 
@@ -15,15 +16,15 @@ async def on_ready():
 
 
 @bot.command(pass_context=True)
-async def price(ctx, ticker):
+async def price(ctx, ticker, fiat: str = default_fiat):
     try:
         response = requests.get(url + ticker)
         fetched = response.json()
         symbol = fetched[0]['symbol']
         current_price = fetched[0]['current_price']
         formatted_price = '{0:,.4f}'.format(current_price)
-        await ctx.send(symbol.upper() + '/USD: $' + str(formatted_price))
-    except IndexError:
+        await ctx.send(symbol.upper() + '/' + fiat.upper() + ': $' + str(formatted_price))
+    except (IndexError, KeyError):
         await ctx.send('Unknown currency')
 
 
