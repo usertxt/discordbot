@@ -2,11 +2,12 @@
 Simple Discord bot that uses CoinGecko's API to fetch cryptocurrency prices
 
 ## Installation
-### Requirements
 
-Install required packages
+### Install required packages
 
-**discord.py**
+> Note: This app is written with the discord.py rewrite, some commands will not work on other versions. More information can be found here: https://discordpy.readthedocs.io/en/rewrite/migrating.html
+
+#### discord.py
 
 Linux/OS X:
 ```
@@ -19,18 +20,34 @@ Windows:
 
 ### Configure
 
+Configure the app using **config.ini**
+
 Add your bot's token to:
 ```
 token = 'YOUR_TOKEN'
 ```
 
-## Usage
-In a Discord chat channel, use the following command to prompt the bot:
+Set your default fiat currency with:
 ```
-!price <currency>
+default_fiat = 'CURRENCY'
 ```
 
-Example:
+## Usage
+In the Discord chat channel your bot has joined, use the following command to prompt the bot:
+```
+!price <crypto> <fiat> 
+```
+
+#### Examples
+
+The following command will return the price of Bitcoin vs the default currency you have chosen in your config:
+
 ```
 !price bitcoin
-``` 
+```
+
+And this command will return the price of Bitcoin vs the Australian dollar:
+
+```
+!price bitcoin aud
+```
