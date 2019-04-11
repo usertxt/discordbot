@@ -18,7 +18,7 @@ async def on_ready():
 @bot.command(pass_context=True)
 async def price(ctx, ticker, fiat: str = default_fiat):
     try:
-        response = requests.get(url + ticker)
+        response = requests.get(url + ticker + '&vs_currency=' + fiat)
         fetched = response.json()
         symbol = fetched[0]['symbol']
         current_price = fetched[0]['current_price']
