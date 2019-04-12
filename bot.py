@@ -1,31 +1,26 @@
 from discord.ext import commands
-import requests
 import configparser
 
+configfile = 'config.ini'
 config = configparser.ConfigParser()
-config.read('config.ini')
-default_fiat = config.get('user', 'default_fiat')
+config.read(configfile)
 token = config.get('user', 'token')
 url = config.get('app', 'url')
+
 bot = commands.Bot(command_prefix='!')
+extensions = ['cryptoticker']
 
 
 @bot.event
 async def on_ready():
     print('Bot is online')
 
+if __name__ == '__main__':
+    for extension in extensions:
+        try:
+            bot.load_extension(extension)
+            print('Loading extension {}'.format(extension))
+        except Exception as error:
+            print('{} cannot be loaded. [{}]'.format(extension, error))
 
-@bot.command(pass_context=True)
-async def price(ctx, ticker, fiat: str = default_fiat):
-    try:
-        response = requests.get(url + ticker + '&vs_currency=' + fiat)
-        fetched = response.json()
-        symbol = fetched[0]['symbol']
-        current_price = fetched[0]['current_price']
-        formatted_price = '{0:,.4f}'.format(current_price)
-        await ctx.send(symbol.upper() + '/' + fiat.upper() + ': $' + str(formatted_price))
-    except (IndexError, KeyError):
-        await ctx.send('Unknown currency')
-
-
-bot.run(token)
+    bot.run(token)
