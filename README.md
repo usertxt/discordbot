@@ -32,15 +32,15 @@ Fiat is set to USD by default. Set your default fiat currency with:
 default_fiat = 'CURRENCY'
 ```
 
-## Usage
+## Commands
 In the Discord chat channel your bot has joined, use the following command to prompt the bot:
 ```
 !price <crypto> <fiat> 
 ```
 
-#### Examples
+**Examples:**
 
-The following command will return the price of Bitcoin vs the default currency you have chosen in your config:
+This command will return the price of Bitcoin vs the default currency you have chosen in your config:
 
 ```
 !price bitcoin
@@ -50,4 +50,16 @@ And this command will return the price of Bitcoin vs the Australian dollar:
 
 ```
 !price bitcoin aud
+```
+
+The setfiat command allows you to use the bot to change your default fiat currency:
+
+```
+!setfiat <fiat>
+```
+
+**Example:**
+
+```
+!setfiat aud
 ```
