@@ -28,7 +28,7 @@ class CryptoTicker(commands.Cog):
                 self.bot.load_extension(cryptoticker)
                 print('[Reloading CryptoTicker Plugin] Config update: default_fiat is now ' + newfiat.upper())
             except Exception as error:
-                print(error)
+                print('setfiat command returned with error: {}'.format(error))
 
     @commands.command(pass_context=True)
     async def price(self, ctx, ticker, fiat: str = default_fiat):
@@ -41,7 +41,7 @@ class CryptoTicker(commands.Cog):
             await ctx.send(symbol.upper() + '/' + fiat.upper() + ': $' + str(formatted_price))
         except Exception as error:
             await ctx.send('Unknown currency or {}'.format(error))
-            print('Price command returned with error: {}'.format(error))
+            print('price command returned with error: {}'.format(error))
 
 
 def setup(bot):
