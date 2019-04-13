@@ -17,18 +17,21 @@ class CryptoTicker(commands.Cog):
 
     @commands.command(pass_context=True)
     async def setfiat(self, ctx, newfiat):
-        await ctx.send('Changing default fiat currency to ' + newfiat.upper())
-        config['user']['default_fiat'] = newfiat
-        with open(configfile, 'w+') as updatedconfigfile:
-            config.write(updatedconfigfile)
-
         for cryptoticker in module:
             try:
+                config['user']['default_fiat'] = newfiat
+                with open(configfile, 'w+') as updatedconfigfile:
+                    config.write(updatedconfigfile)
+
                 self.bot.unload_extension(cryptoticker)
                 self.bot.load_extension(cryptoticker)
+
+                await ctx.send('Changing default fiat currency to ' + newfiat.upper())
                 print('[Reloading CryptoTicker Plugin] Config update: default_fiat is now ' + newfiat.upper())
+
             except Exception as error:
-                print('setfiat command returned with error: {}'.format(error))
+                await ctx.send(f'setfiat command returned an error: {error}')
+                print(f'setfiat command returned with error: {error}')
 
     @commands.command(pass_context=True)
     async def price(self, ctx, ticker, fiat: str = default_fiat):
@@ -39,9 +42,10 @@ class CryptoTicker(commands.Cog):
             current_price = fetched[0]['current_price']
             formatted_price = '{0:,.4f}'.format(current_price)
             await ctx.send(symbol.upper() + '/' + fiat.upper() + ': $' + str(formatted_price))
+
         except Exception as error:
-            await ctx.send('Unknown currency or {}'.format(error))
-            print('price command returned with error: {}'.format(error))
+            await ctx.send(f'Unknown currency or error: {error}')
+            print(f'price command returned with error: {error}')
 
 
 def setup(bot):

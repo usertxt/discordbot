@@ -19,8 +19,9 @@ if __name__ == '__main__':
     for extension in extensions:
         try:
             bot.load_extension(extension)
-            print('Loading extension {}'.format(extension))
+            print(f'Loading extension {extension}')
+
         except Exception as error:
-            print('{} cannot be loaded. [{}]'.format(extension, error))
+            print(f'{extension} cannot be loaded. [{error}]')
 
     bot.run(token)
