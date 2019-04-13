@@ -15,6 +15,16 @@ class CryptoTicker(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            if error.param.name == 'newfiat':
+                await ctx.send('setfiat usage: !setfiat <fiat>')
+
+        if isinstance(error, commands.MissingRequiredArgument):
+            if error.param.name == 'ticker':
+                await ctx.send('price usage: !price <currency> [fiat]')
+
     @commands.command(pass_context=True)
     async def setfiat(self, ctx, newfiat):
         for cryptoticker in module:
