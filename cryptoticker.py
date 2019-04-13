@@ -30,7 +30,7 @@ class CryptoTicker(commands.Cog):
                 print('[Reloading CryptoTicker Plugin] Config update: default_fiat is now ' + newfiat.upper())
 
             except Exception as error:
-                await ctx.send(f'setfiat command returned an error: {error}')
+                await ctx.send(f'setfiat command returned with error: {error}')
                 print(f'setfiat command returned with error: {error}')
 
     @commands.command(pass_context=True)
@@ -44,7 +44,7 @@ class CryptoTicker(commands.Cog):
             await ctx.send(symbol.upper() + '/' + fiat.upper() + ': $' + str(formatted_price))
 
         except Exception as error:
-            await ctx.send(f'Unknown currency or error: {error}')
+            await ctx.send(f'price command returned with error: {error}')
             print(f'price command returned with error: {error}')
 
 

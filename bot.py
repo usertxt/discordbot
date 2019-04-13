@@ -22,6 +22,6 @@ if __name__ == '__main__':
             print(f'Loading extension {extension}')
 
         except Exception as error:
-            print(f'{extension} cannot be loaded. [{error}]')
+            print(f'Loading {extension} returned with error: [{error}]')
 
     bot.run(token)
