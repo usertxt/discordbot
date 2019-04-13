@@ -19,7 +19,7 @@ class CryptoTicker(commands.Cog):
     async def setfiat(self, ctx, newfiat):
         for cryptoticker in module:
             try:
-                config['user']['default_fiat'] = newfiat
+                config['user']['default_fiat'] = newfiat.lower()
                 with open(configfile, 'w+') as updatedconfigfile:
                     config.write(updatedconfigfile)
 
