@@ -35,7 +35,7 @@ default_fiat = 'CURRENCY'
 ## Commands
 In the Discord chat channel your bot has joined, use the following command to prompt the bot:
 ```
-!price <crypto> [fiat] 
+!price <currency> [fiat] 
 ```
 
 **Examples:**
