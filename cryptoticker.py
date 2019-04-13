@@ -1,4 +1,5 @@
 from discord.ext import commands
+import asyncio
 import requests
 import configparser
 
@@ -36,12 +37,18 @@ class CryptoTicker(commands.Cog):
                 self.bot.unload_extension(cryptoticker)
                 self.bot.load_extension(cryptoticker)
 
-                await ctx.send('Changing default fiat currency to ' + newfiat.upper())
-                print('[Reloading CryptoTicker Plugin] Config update: default_fiat is now ' + newfiat.upper())
+                async with ctx.typing():
+                    await asyncio.sleep(1)
+                    await ctx.send('Changing default fiat currency to ' + newfiat.upper())
+                    print('[Reloading CryptoTicker Plugin] Config update: default_fiat is now ' + newfiat.upper())
+                    await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
 
             except Exception as error:
-                await ctx.send(f'setfiat command returned with error: {error}')
-                print(f'setfiat command returned with error: {error}')
+                async with ctx.typing():
+                    await asyncio.sleep(1)
+                    await ctx.send(f'setfiat command returned with error: {error}')
+                    print(f'setfiat command returned with error: {error}')
+                    await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
 
     @commands.command(pass_context=True)
     async def price(self, ctx, ticker, fiat: str = default_fiat):
@@ -51,11 +58,17 @@ class CryptoTicker(commands.Cog):
             symbol = fetched[0]['symbol']
             current_price = fetched[0]['current_price']
             formatted_price = '{0:,.4f}'.format(current_price)
-            await ctx.send(symbol.upper() + '/' + fiat.upper() + ': $' + str(formatted_price))
+            async with ctx.typing():
+                await asyncio.sleep(1)
+                await ctx.send(symbol.upper() + '/' + fiat.upper() + ': $' + str(formatted_price))
+                await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
 
         except Exception as error:
-            await ctx.send(f'price command returned with error: {error}')
-            print(f'price command returned with error: {error}')
+            async with ctx.typing():
+                await asyncio.sleep(1)
+                await ctx.send(f'price command returned with error: {error}')
+                print(f'price command returned with error: {error}')
+                await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
 
 
 def setup(bot):
