@@ -2,14 +2,15 @@ from discord.ext import commands
 import asyncio
 import requests
 import configparser
+import os
 
-configfile = 'config.ini'
+configfile = os.path.join(os.path.dirname(__file__), '..', 'config.ini')
 config = configparser.ConfigParser()
 config.read(configfile)
 default_fiat = config.get('user', 'default_fiat')
 url = config.get('app', 'url')
 
-module = ['cryptoticker']
+this_extension = ['cogs.cryptoticker']
 
 
 class CryptoTicker(commands.Cog):
@@ -28,7 +29,7 @@ class CryptoTicker(commands.Cog):
 
     @commands.command(pass_context=True)
     async def setfiat(self, ctx, newfiat):
-        for cryptoticker in module:
+        for cryptoticker in this_extension:
             try:
                 config['user']['default_fiat'] = newfiat.lower()
                 with open(configfile, 'w+') as updatedconfigfile:
