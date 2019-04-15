@@ -5,7 +5,6 @@ configfile = 'config.ini'
 config = configparser.ConfigParser()
 config.read(configfile)
 token = config.get('user', 'token')
-url = config.get('app', 'url')
 
 bot = commands.Bot(command_prefix='!')
 extensions = ['cryptoticker']
