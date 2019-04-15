@@ -1,5 +1,5 @@
 # usertxt's Discord Bot
-Simple Discord bot that uses CoinGecko's API to fetch cryptocurrency prices
+A Discord bot
 
 Written in Python 3.7.2
 
@@ -34,7 +34,13 @@ Fiat is set to USD by default. Set your default fiat currency with:
 default_fiat = 'CURRENCY'
 ```
 
-## Commands
+## Cogs
+
+### CryptoTicker
+This extension uses CoinGecko's API to fetch cryptocurrency prices.
+
+**Commands:**
+
 In the Discord chat channel your bot has joined, use the following command to prompt the bot:
 ```
 !price <currency> [fiat] 
