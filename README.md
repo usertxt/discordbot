@@ -9,16 +9,10 @@ Written in Python 3.7.2
 
 > Note: This app is written with the discord.py rewrite, some commands will not work on other versions. More information can be found here: https://discordpy.readthedocs.io/en/rewrite/migrating.html
 
-**discord.py**
+```
+ pip3 install -r requirements.txt
+```
 
-Linux/OS X:
-```
- python3 -m pip install -U discord.py
-```
-Windows:
-```
- py -3 -m pip install -U discord.py
-```
 
 ## Configure
 
