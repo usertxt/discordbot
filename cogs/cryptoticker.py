@@ -1,14 +1,14 @@
 from discord.ext import commands
 import asyncio
 import requests
-import configparser
+import json
 import os
 
-configfile = os.path.join(os.path.dirname(__file__), '..', 'config.ini')
-config = configparser.ConfigParser()
-config.read(configfile)
-default_fiat = config.get('user', 'default_fiat')
-url = config.get('app', 'url')
+configfile = os.path.join(os.path.dirname(__file__), '..', 'config.json')
+with open(configfile, 'r') as infile:
+    data = json.load(infile)
+default_fiat = data["USER"]["DEFAULT_FIAT"]
+url = data["APP"]["URL"]
 
 this_extension = ['cogs.cryptoticker']
 
@@ -31,9 +31,9 @@ class CryptoTicker(commands.Cog):
     async def setfiat(self, ctx, newfiat):
         for cryptoticker in this_extension:
             try:
-                config['user']['default_fiat'] = newfiat.lower()
-                with open(configfile, 'w+') as updatedconfigfile:
-                    config.write(updatedconfigfile)
+                data["USER"]["DEFAULT_FIAT"] = newfiat.lower()
+                with open(configfile, 'w') as updatedconfigfile:
+                    json.dump(data, updatedconfigfile, indent=2, sort_keys=False, ensure_ascii=False)
 
                 self.bot.unload_extension(cryptoticker)
                 self.bot.load_extension(cryptoticker)

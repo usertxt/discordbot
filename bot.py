@@ -1,13 +1,13 @@
 from discord.ext import commands
-import configparser
+import json
 import os
 from os import listdir
 from os.path import isfile, join
 
-configfile = os.path.join(os.path.dirname(__file__), 'config.ini')
-config = configparser.ConfigParser()
-config.read(configfile)
-token = config.get('user', 'token')
+configfile = os.path.join(os.path.dirname(__file__), 'config.json')
+with open(configfile, 'r') as infile:
+    data = json.load(infile)
+token = data["USER"]["TOKEN"]
 
 bot = commands.Bot(command_prefix='!')
 COGS_DIR = 'cogs'

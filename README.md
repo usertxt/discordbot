@@ -16,17 +16,18 @@ Written in Python 3.7.2
 
 ## Configure
 
-Configure the app using **config.ini**
+Configure the app using **config.json**
 
 Add your bot's token to:
 ```
-token = 'YOUR_TOKEN'
+"TOKEN": "YOUR_TOKEN"
 ```
 
 Fiat is set to USD by default. Set your default fiat currency with:
 ```
-default_fiat = 'CURRENCY'
+"DEFAULT_FIAT": "CURRENCY"
 ```
+>Note: Use the lowercase three letter symbol for your DEFAULT_FIAT currency or the API won't fetch the information properly.
 
 ## Cogs
 

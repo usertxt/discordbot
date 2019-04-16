@@ -1,6 +1,6 @@
 # My additions
 .idea/
-localconfig.ini
+localconfig.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
