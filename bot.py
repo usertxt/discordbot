@@ -1,12 +1,10 @@
 from discord.ext import commands
 import json
-import os
 from os import listdir
 from os.path import isfile, join
 
-configfile = os.path.join(os.path.dirname(__file__), 'config.json')
-with open(configfile, 'r') as infile:
-    data = json.load(infile)
+configfile = 'config.json'
+data = json.load(open(configfile))
 token = data["USER"]["TOKEN"]
 
 bot = commands.Bot(command_prefix='!')
