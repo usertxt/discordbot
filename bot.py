@@ -19,7 +19,7 @@ if __name__ == '__main__':
     for extension in [f.replace('.py', '') for f in listdir(COGS_DIR) if isfile(join(COGS_DIR, f))]:
         try:
             bot.load_extension(COGS_DIR + '.' + extension)
-            print(f'Loading extension {extension}')
+            print(f'Loading extension: {extension}')
 
         except Exception as error:
             print(f'Loading {extension} returned with error: [{error}]')

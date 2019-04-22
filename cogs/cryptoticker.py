@@ -8,6 +8,10 @@ data = json.load(open(configfile))
 default_fiat = data["USER"]["DEFAULT_FIAT"]
 url = data["APP"]["URL"]
 
+coin_list_url = data["APP"]["COIN_LIST"]
+coin_fetch = requests.get(coin_list_url)
+coin_list = coin_fetch.json()
+
 this_extension = ['cogs.cryptoticker']
 
 
@@ -51,7 +55,12 @@ class CryptoTicker(commands.Cog):
 
     @commands.command(pass_context=True)
     async def price(self, ctx, ticker, fiat: str = default_fiat):
+        ticker = ticker.lower()
         try:
+            for coin in coin_list:
+                if ticker == coin['symbol']:
+                    ticker = coin['id']
+
             response = requests.get(url + ticker + '&vs_currency=' + fiat)
             fetched = response.json()
             symbol = fetched[0]['symbol']
