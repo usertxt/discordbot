@@ -40,7 +40,7 @@ class CryptoTicker(commands.Cog):
                 try:
                     data["USER"]["BASE_CURRENCY"] = newbase.lower()
                     with open(configfile, 'w') as updatedconfigfile:
-                        json.dump(data, updatedconfigfile, indent=2, sort_keys=False, ensure_ascii=False)
+                        json.dump(data, updatedconfigfile, indent=2, sort_keys=False, ensure_ascii=True)
 
                     self.bot.unload_extension(cryptoticker)
                     self.bot.load_extension(cryptoticker)
@@ -67,17 +67,7 @@ class CryptoTicker(commands.Cog):
     @commands.command(pass_context=True)
     async def price(self, ctx, ticker, base: str = base_currency):
         ticker = ticker.lower()
-        currency_symbol = '$'
-
-        if base_currency and base == 'usd':
-            currency_symbol = '$'
-        if base_currency and base == 'btc':
-            currency_symbol = u'\u0243'
-        if base_currency and base == 'eth':
-            currency_symbol = u'\u039E'
-        if base_currency and base == 'eur':
-            currency_symbol = u'\u20AC'
-
+        currency_symbol = data["APP"]["CURRENCIES"][base_currency.upper()]
         try:
             for coin in coin_list:
                 if ticker == coin['symbol']:

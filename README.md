@@ -25,7 +25,7 @@ Add your bot's token to:
 
 Fiat is set to USD by default. Set your default fiat currency with:
 ```
-"DEFAULT_FIAT": "CURRENCY"
+"BASE_CURRENCY: "CURRENCY"
 ```
 >Note: Use the lowercase three letter symbol for your DEFAULT_FIAT currency or the API won't fetch the information properly.
 
@@ -55,14 +55,14 @@ And this command will return the price of Bitcoin vs the Australian dollar:
 !price btc aud
 ```
 
-The setfiat command allows you to use the bot to change your default fiat currency:
+The basecurrency command allows you to use the bot to change your default base currency:
 
 ```
-!setfiat <fiat>
+!basecurrency <currency>
 ```
 
 **Example:**
 
 ```
-!setfiat aud
+!basecurrency aud
 ```
