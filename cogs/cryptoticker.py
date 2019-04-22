@@ -67,6 +67,17 @@ class CryptoTicker(commands.Cog):
     @commands.command(pass_context=True)
     async def price(self, ctx, ticker, base: str = base_currency):
         ticker = ticker.lower()
+        currency_symbol = '$'
+
+        if base_currency and base == 'usd':
+            currency_symbol = '$'
+        if base_currency and base == 'btc':
+            currency_symbol = u'\u0243'
+        if base_currency and base == 'eth':
+            currency_symbol = u'\u039E'
+        if base_currency and base == 'eur':
+            currency_symbol = u'\u20AC'
+
         try:
             for coin in coin_list:
                 if ticker == coin['symbol']:
@@ -79,7 +90,7 @@ class CryptoTicker(commands.Cog):
             formatted_price = '{0:,.4f}'.format(current_price)
             async with ctx.typing():
                 await asyncio.sleep(1)
-                await ctx.send(symbol.upper() + '/' + base.upper() + ': $' + str(formatted_price))
+                await ctx.send(symbol.upper() + '/' + base.upper() + ': ' + currency_symbol + str(formatted_price))
                 await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
 
         except Exception as error:
