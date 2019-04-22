@@ -67,7 +67,12 @@ class CryptoTicker(commands.Cog):
     @commands.command(pass_context=True)
     async def price(self, ctx, ticker, base: str = base_currency):
         ticker = ticker.lower()
-        currency_symbol = data["APP"]["CURRENCIES"][base_currency.upper()]
+        currency_symbol = "$"
+        currency_symbol_list = data["APP"]["CURRENCIES"]
+
+        if base_currency in currency_symbol_list:
+            currency_symbol = data["APP"]["CURRENCIES"][base_currency.upper()]
+
         try:
             for coin in coin_list:
                 if ticker == coin['symbol']:
