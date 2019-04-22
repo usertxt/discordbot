@@ -18,6 +18,17 @@ supported_currencies_list = supported_currencies_fetch.json()
 
 this_extension = ['cogs.cryptoticker']
 
+if default_fiat == 'usd':
+    currency_symbol = '$'
+if default_fiat == 'btc':
+    currency_symbol = '₿'
+if default_fiat == 'eth':
+    currency_symbol = 'Ξ'
+if default_fiat == 'ltc':
+    currency_symbol = 'Ł'
+if default_fiat == 'eur':
+    currency_symbol = '€'
+
 
 class CryptoTicker(commands.Cog):
     def __init__(self, bot):
@@ -79,7 +90,7 @@ class CryptoTicker(commands.Cog):
             formatted_price = '{0:,.4f}'.format(current_price)
             async with ctx.typing():
                 await asyncio.sleep(1)
-                await ctx.send(symbol.upper() + '/' + fiat.upper() + ': $' + str(formatted_price))
+                await ctx.send(symbol.upper() + '/' + fiat.upper() + ': ' + currency_symbol + str(formatted_price))
                 await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
 
         except Exception as error:
