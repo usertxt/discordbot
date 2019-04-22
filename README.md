@@ -44,15 +44,15 @@ In the Discord chat channel your bot has joined, use the following command to pr
 **Examples:**
 
 This command will return the price of Bitcoin vs the default currency you have chosen in your config:
-
+> Note: You are able to use the symbol or the full name of the currency. BTC or Bitcoin.
 ```
-!price bitcoin
+!price btc
 ```
 
 And this command will return the price of Bitcoin vs the Australian dollar:
 
 ```
-!price bitcoin aud
+!price btc aud
 ```
 
 The setfiat command allows you to use the bot to change your default fiat currency:
