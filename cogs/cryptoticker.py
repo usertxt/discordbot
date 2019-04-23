@@ -3,25 +3,19 @@ import asyncio
 import requests
 import json
 
-configfile = 'config.json'
-data = json.load(open(configfile))
-base_currency = data["USER"]["BASE_CURRENCY"]
-url = data["APP"]["URL"]
-
-coin_list_url = data["APP"]["COIN_LIST"]
-coin_fetch = requests.get(coin_list_url)
-coin_list = coin_fetch.json()
-
-supported_currencies_url = data["APP"]["SUPPORTED_CURRENCIES"]
-supported_currencies_fetch = requests.get(supported_currencies_url)
-supported_currencies_list = supported_currencies_fetch.json()
-
-this_extension = ['cogs.cryptoticker']
-
 
 class CryptoTicker(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.config = self.bot.config
+
+        self.base_currency = self.config["USER"]["BASE_CURRENCY"]
+        self.url = self.config["APP"]["URL"]
+        self.coin_list = requests.get(self.config["APP"]["COIN_LIST"]).json()
+        self.supported_currencies = requests.get(self.config["APP"]["SUPPORTED_CURRENCIES"]).json()
+        self.currency_symbol_list = self.config["APP"]["CURRENCIES"]
+
+        self.this_extension = 'cogs.cryptoticker'
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -35,64 +29,74 @@ class CryptoTicker(commands.Cog):
 
     @commands.command(pass_context=True)
     async def basecurrency(self, ctx, newbase):
-        if newbase in supported_currencies_list:
-            for cryptoticker in this_extension:
-                try:
-                    data["USER"]["BASE_CURRENCY"] = newbase.lower()
-                    with open(configfile, 'w') as updatedconfigfile:
-                        json.dump(data, updatedconfigfile, indent=2, sort_keys=False, ensure_ascii=True)
+        if newbase in self.supported_currencies:
+            try:
+                self.bot.config["USER"]["BASE_CURRENCY"] = newbase.lower()
+                with open(self.bot.configfile, 'w') as updatedconfigfile:
+                    json.dump(self.bot.config, updatedconfigfile, indent=2, sort_keys=False, ensure_ascii=True)
 
-                    self.bot.unload_extension(cryptoticker)
-                    self.bot.load_extension(cryptoticker)
+                self.bot.unload_extension(self.this_extension)
+                self.bot.load_extension(self.this_extension)
 
-                    async with ctx.typing():
-                        await asyncio.sleep(1)
-                        await ctx.send(f'Changing default base currency to {newbase.upper()}')
-                        print(f'[Reloading CryptoTicker] Config update: BASE_CURRENCY is now {newbase.upper()}')
-                        await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
+                async with ctx.typing():
+                    await asyncio.sleep(1)
+                    await ctx.send(f'Changing default base currency to {newbase.upper()}')
+                    print(f'[Reloading CryptoTicker] Config update: BASE_CURRENCY is now {newbase.upper()}')
+                    await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
 
-                except Exception as error:
-                    async with ctx.typing():
-                        await asyncio.sleep(1)
-                        await ctx.send(f'basecurrency command returned with error: {error}')
-                        print(f'basecurrency command returned with error: {error}')
-                        await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
+            except Exception as error:
+                async with ctx.typing():
+                    await asyncio.sleep(1)
+                    await ctx.send(f'basecurrency command returned with error: {error.tr}')
+                    print(f'basecurrency command returned with error: {error}')
+                    await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
         else:
             async with ctx.typing():
                 await asyncio.sleep(1)
-                await ctx.send(f'Error: {newbase} is not a supported currency')
-                print(f'Error: {newbase} is not a supported currency')
+                await ctx.send(f'CryptoTicker Error: {newbase} is not a supported currency')
+                print(f'CryptoTicker Error: {newbase} is not a supported currency')
                 await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
 
     @commands.command(pass_context=True)
-    async def price(self, ctx, ticker, base: str = base_currency):
+    async def price(self, ctx, ticker, base=None):
         ticker = ticker.lower()
         currency_symbol = "$"
-        currency_symbol_list = data["APP"]["CURRENCIES"]
 
-        if base_currency in currency_symbol_list:
-            currency_symbol = data["APP"]["CURRENCIES"][base_currency.upper()]
+        if base is None:
+            base = self.base_currency
 
-        try:
-            for coin in coin_list:
-                if ticker == coin['symbol']:
-                    ticker = coin['id']
+        if base.upper() in self.currency_symbol_list:
+            currency_symbol = self.config["APP"]["CURRENCIES"][base.upper()]
 
-            response = requests.get(url + ticker + '&vs_currency=' + base)
-            fetched = response.json()
-            symbol = fetched[0]['symbol']
-            current_price = fetched[0]['current_price']
-            formatted_price = '{0:,.4f}'.format(current_price)
+        base = base.lower()
+
+        if base in self.supported_currencies:
+            try:
+                for coin in self.coin_list:
+                    if ticker == coin['symbol']:
+                        ticker = coin['id']
+
+                response = requests.get(self.url + ticker + '&vs_currency=' + base)
+                fetched = response.json()
+                symbol = fetched[0]['symbol']
+                current_price = fetched[0]['current_price']
+                formatted_price = '{0:,.4f}'.format(current_price)
+                async with ctx.typing():
+                    await asyncio.sleep(1)
+                    await ctx.send(symbol.upper() + '/' + base.upper() + ': ' + currency_symbol + str(formatted_price))
+                    await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
+
+            except Exception as error:
+                async with ctx.typing():
+                    await asyncio.sleep(1)
+                    await ctx.send(f'price command returned with error: {error}')
+                    print(f'price command returned with error: {error}')
+                    await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
+
+        else:
             async with ctx.typing():
                 await asyncio.sleep(1)
-                await ctx.send(symbol.upper() + '/' + base.upper() + ': ' + currency_symbol + str(formatted_price))
-                await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
-
-        except Exception as error:
-            async with ctx.typing():
-                await asyncio.sleep(1)
-                await ctx.send(f'price command returned with error: {error}')
-                print(f'price command returned with error: {error}')
+                await ctx.send(f'CryptoTicker error: {base} is not a supported currency')
                 await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
 
 
