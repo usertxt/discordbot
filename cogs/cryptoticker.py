@@ -27,11 +27,12 @@ class CryptoTicker(commands.Cog):
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             if error.param.name == 'newbase':
-                await ctx.send('basecurrency usage: basecurrency <currency>')
+                await ctx.send(f'```BASE_CURRENCY: {self.base_currency}\n'
+                               f'command usage: basecurrency <currency>```')
 
         if isinstance(error, commands.MissingRequiredArgument):
             if error.param.name == 'ticker':
-                await ctx.send('price usage: price <currency> [base_currency]')
+                await ctx.send('```command usage: price <currency> [base_currency]```')
 
     @commands.command(pass_context=True)
     async def basecurrency(self, ctx, newbase):
@@ -65,15 +66,15 @@ class CryptoTicker(commands.Cog):
 
     @commands.command(pass_context=True)
     async def price(self, ctx, ticker, base=None):
-        ticker = ticker.lower()
-        currency_symbol = "$"
-
         if base is None:
             base = self.base_currency
 
         if base.upper() in currency_symbol_dict:
             currency_symbol = currency_symbol_dict[base.upper()]
+        else:
+            currency_symbol = '$'
 
+        ticker = ticker.lower()
         base = base.lower()
 
         if base in self.supported_currencies:
