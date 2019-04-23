@@ -13,6 +13,7 @@ class CryptoTicker(commands.Cog):
         self.url = self.config["APP"]["URL"]
         self.coin_list = requests.get(self.config["APP"]["COIN_LIST"]).json()
         self.supported_currencies = requests.get(self.config["APP"]["SUPPORTED_CURRENCIES"]).json()
+        self.currency_symbol_list = self.config["APP"]["CURRENCIES"]
 
         self.this_extension = ['cogs.cryptoticker']
 
@@ -60,17 +61,15 @@ class CryptoTicker(commands.Cog):
     @commands.command(pass_context=True)
     async def price(self, ctx, ticker, base=None):
         ticker = ticker.lower()
+        currency_symbol = "$"
 
         if base is None:
             base = self.base_currency
 
+        if base.upper() in self.currency_symbol_list:
+            currency_symbol = self.config["APP"]["CURRENCIES"][base.upper()]
+
         base = base.lower()
-
-        currency_symbol = "$"
-        currency_symbol_list = self.config["APP"]["CURRENCIES"]
-
-        if self.base_currency in currency_symbol_list:
-            currency_symbol = self.config["APP"]["CURRENCIES"][self.base_currency.upper()]
 
         if ticker in self.supported_currencies and base in self.supported_currencies:
             try:
