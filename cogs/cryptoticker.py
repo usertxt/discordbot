@@ -3,6 +3,13 @@ import asyncio
 import requests
 import json
 
+currency_symbol_dict = {'USD': '$', 'BTC': '₿', 'ETH': 'Ξ', 'LTC': 'Ł', 'EUR': '€', 'JPY': '¥', 'RUB': '₽',
+                        'AED': 'د.إ', 'BDT': '৳', 'BHD': 'BD', 'CNY': '¥', 'CZK': 'Kč', 'DKK': 'kr.', 'GBP': '£',
+                        'HUF': 'Ft', 'IDR': 'Rp', 'ILS': '₪', 'INR': '₹', 'KRW': '₩', 'KWD': 'KD', 'LKR': 'රු',
+                        'MMK': 'K', 'MYR': 'RM', 'NOK': 'kr', 'PHP': '₱', 'PKR': 'Rs', 'PLN': 'zł', 'SAR': 'SR',
+                        'SEK': 'kr', 'THB': '฿', 'TRY': '₺', 'VEF': 'Bs.', 'VND': '₫', 'ZAR': 'R', 'XDR': 'SDR',
+                        'XAG': 'XAG', 'XAU': 'XAU'}
+
 
 class CryptoTicker(commands.Cog):
     def __init__(self, bot):
@@ -13,7 +20,6 @@ class CryptoTicker(commands.Cog):
         self.url = self.config["APP"]["URL"]
         self.coin_list = requests.get(self.config["APP"]["COIN_LIST"]).json()
         self.supported_currencies = requests.get(self.config["APP"]["SUPPORTED_CURRENCIES"]).json()
-        self.currency_symbol_list = self.config["APP"]["CURRENCIES"]
 
         self.this_extension = 'cogs.cryptoticker'
 
@@ -65,8 +71,8 @@ class CryptoTicker(commands.Cog):
         if base is None:
             base = self.base_currency
 
-        if base.upper() in self.currency_symbol_list:
-            currency_symbol = self.config["APP"]["CURRENCIES"][base.upper()]
+        if base.upper() in currency_symbol_dict:
+            currency_symbol = currency_symbol_dict[base.upper()]
 
         base = base.lower()
 
