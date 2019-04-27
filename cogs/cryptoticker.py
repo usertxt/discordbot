@@ -16,10 +16,10 @@ class CryptoTicker(commands.Cog):
         self.bot = bot
         self.config = self.bot.config
 
-        self.base_currency = self.config["USER"]["BASE_CURRENCY"]
-        self.url = self.config["APP"]["URL"]
-        self.coin_list = requests.get(self.config["APP"]["COIN_LIST"]).json()
-        self.supported_currencies = requests.get(self.config["APP"]["SUPPORTED_CURRENCIES"]).json()
+        self.base_currency = self.config["CRYPTOTICKER"]["USER"]["BASE_CURRENCY"]
+        self.url = self.config["CRYPTOTICKER"]["APP"]["URL"]
+        self.coin_list = requests.get(self.config["CRYPTOTICKER"]["APP"]["COIN_LIST"]).json()
+        self.supported_currencies = requests.get(self.config["CRYPTOTICKER"]["APP"]["SUPPORTED_CURRENCIES"]).json()
 
         self.this_extension = 'cogs.cryptoticker'
 
@@ -38,7 +38,7 @@ class CryptoTicker(commands.Cog):
     async def basecurrency(self, ctx, newbase):
         if newbase in self.supported_currencies:
             try:
-                self.bot.config["USER"]["BASE_CURRENCY"] = newbase.lower()
+                self.bot.config["CRYPTOTICKER"]["USER"]["BASE_CURRENCY"] = newbase.lower()
                 with open(self.bot.configfile, 'w') as updatedconfigfile:
                     json.dump(self.bot.config, updatedconfigfile, indent=2, sort_keys=False, ensure_ascii=True)
 
@@ -54,14 +54,14 @@ class CryptoTicker(commands.Cog):
             except Exception as error:
                 async with ctx.typing():
                     await asyncio.sleep(1)
-                    await ctx.send(f'basecurrency command returned with error: {error.tr}')
+                    await ctx.send(f'basecurrency command returned with error: {error}')
                     print(f'basecurrency command returned with error: {error}')
                     await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
         else:
             async with ctx.typing():
                 await asyncio.sleep(1)
                 await ctx.send(f'CryptoTicker Error: {newbase} is not a supported currency')
-                print(f'CryptoTicker Error: {newbase} is not a supported currency')
+                print(f'[CryptoTicker Error]: {newbase} is not a supported currency')
                 await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
 
     @commands.command(pass_context=True)

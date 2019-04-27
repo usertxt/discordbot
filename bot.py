@@ -14,7 +14,7 @@ async def on_ready():
 if __name__ == '__main__':
     bot.configfile = 'config.json'
     bot.config = json.load(open(bot.configfile))
-    token = bot.config["USER"]["TOKEN"]
+    token = bot.config["DISCORD"]["TOKEN"]
 
     for extension in [f.replace('.py', '') for f in listdir(COGS_DIR) if isfile(join(COGS_DIR, f))]:
         try:
