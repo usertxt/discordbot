@@ -32,7 +32,7 @@ Fiat is set to USD by default. Set your default fiat currency with:
 ## Cogs
 
 ### CryptoTicker
-This extension uses CoinGecko's API to fetch cryptocurrency prices.
+CryptoTicker uses CoinGecko's API to fetch cryptocurrency prices.
 
 **Commands:**
 
@@ -70,6 +70,8 @@ The basecurrency command allows you to use the bot to change your default base c
 
 ### TwitStream
 TwitStream fetches user's tweets and relays them to your Discord channel.
+
+You will need your own Twitter Developer account  and your own keys for this cog to work. You can apply for a Twitter dev account here: https://developer.twitter.com/
 
 **Commands:**
 
