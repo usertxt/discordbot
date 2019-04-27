@@ -21,6 +21,8 @@ class TwitStream(commands.Cog):
         if count is None:
             count = 1
 
+        print(f'[TwitStream Prompted]: {ctx.message.author}: twit {screen_name} {count}')
+
         if int(count) > 150:
             async with ctx.typing():
                 await asyncio.sleep(1)
@@ -33,6 +35,7 @@ class TwitStream(commands.Cog):
                 tzinfo=timezone.utc).astimezone(tz=None).strftime('%I:%M:%S %m-%d-%y')
             full_text = data[num]["full_text"].replace('&amp;', '&')
 
+            print(f'[TwitStream Returned]: @{data[0]["user"]["screen_name"]}: {full_text}')
             e = discord.Embed()
             e.set_thumbnail(url=data[0]["user"]["profile_image_url"])
             e.add_field(name=date_string, value=full_text, inline=True)
