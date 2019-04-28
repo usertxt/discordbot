@@ -41,6 +41,7 @@ class CryptoTicker(commands.Cog):
     @commands.command(pass_context=True)
     async def basecurrency(self, ctx, newbase):
         print(f'[CryptoTicker Prompted]: {ctx.message.author}: basecurrency {newbase}')
+        newbase = newbase.lower()
         if newbase in self.supported_currencies:
             try:
                 self.bot.config["CRYPTOTICKER"]["BASE_CURRENCY"] = newbase.lower()
