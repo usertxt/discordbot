@@ -1,8 +1,6 @@
-import discord
 from discord.ext import commands
 from twitter import *
 import asyncio
-from datetime import datetime, timezone
 
 
 class TwitStream(commands.Cog):
