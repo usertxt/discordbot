@@ -16,10 +16,10 @@ class CryptoTicker(commands.Cog):
         self.bot = bot
         self.config = self.bot.config["CRYPTOTICKER"]
 
-        self.base_currency = self.config["USER"]["BASE_CURRENCY"]
-        self.url = self.config["APP"]["URL"]
-        self.coin_list = requests.get(self.config["APP"]["COIN_LIST"]).json()
-        self.supported_currencies = requests.get(self.config["APP"]["SUPPORTED_CURRENCIES"]).json()
+        self.base_currency = self.config["BASE_CURRENCY"]
+        self.url = self.config["URL"]
+        self.coin_list = requests.get(self.config["COIN_LIST"]).json()
+        self.supported_currencies = requests.get(self.config["SUPPORTED_CURRENCIES"]).json()
 
         self.this_extension = 'cogs.cryptoticker'
 
@@ -43,7 +43,7 @@ class CryptoTicker(commands.Cog):
         print(f'[CryptoTicker Prompted]: {ctx.message.author}: basecurrency {newbase}')
         if newbase in self.supported_currencies:
             try:
-                self.bot.config["CRYPTOTICKER"]["USER"]["BASE_CURRENCY"] = newbase.lower()
+                self.bot.config["CRYPTOTICKER"]["BASE_CURRENCY"] = newbase.lower()
                 with open(self.bot.configfile, 'w') as updatedconfigfile:
                     json.dump(self.bot.config, updatedconfigfile, indent=2, sort_keys=False, ensure_ascii=True)
 

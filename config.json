@@ -3,14 +3,10 @@
     "TOKEN": "YOUR_TOKEN"
   },
   "CRYPTOTICKER": {
-    "USER": {
-      "BASE_CURRENCY": "usd"
-    },
-    "APP": {
-      "URL": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=",
-      "COIN_LIST": "https://api.coingecko.com/api/v3/coins/list",
-      "SUPPORTED_CURRENCIES": "https://api.coingecko.com/api/v3/simple/supported_vs_currencies"
-    }
+    "BASE_CURRENCY": "usd",
+    "URL": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=",
+    "COIN_LIST": "https://api.coingecko.com/api/v3/coins/list",
+    "SUPPORTED_CURRENCIES": "https://api.coingecko.com/api/v3/simple/supported_vs_currencies"
   },
   "TWITSTREAM": {
     "CONSUMER_KEY": "YOUR_CONSUMER_KEY",
