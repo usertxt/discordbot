@@ -12,8 +12,8 @@ async def on_ready():
     print('Bot is online')
 
 if __name__ == '__main__':
-    bot.configfile = 'config.json'
-    bot.config = json.load(open(bot.configfile))
+    bot.configpath = 'config.json'
+    bot.config = json.load(open(bot.configpath))
     token = bot.config["DISCORD"]["TOKEN"]
 
     for extension in [f.replace('.py', '') for f in listdir(COGS_DIR) if isfile(join(COGS_DIR, f))]:
