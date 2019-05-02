@@ -67,7 +67,7 @@ class Portfolio(commands.Cog):
             session.close()
             await ctx.send(f'Adding {ticker} {quantity} {price} for {ctx.message.author.name}')
         else:
-            await ctx.send(f'{ticker} is not a supported currency')
+            await ctx.send(f'Error: {ticker} is not a supported currency')
 
     @commands.command(pass_context=True)
     async def positionremove(self, ctx, ticker, quantity, price):
