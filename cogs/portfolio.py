@@ -4,7 +4,6 @@ import sqlalchemy as sql
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-sqlalchemy = sql
 engine = sql.create_engine('sqlite:///portfolio.db', echo=True)
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
@@ -58,7 +57,6 @@ class Portfolio(commands.Cog):
     @commands.command(pass_context=True)
     async def positionadd(self, ctx, ticker, quantity, price):
         if ticker in str(self.supported_coins):
-            print('lol')
             user = User(name=ctx.message.author.name, discord_id=ctx.message.author.id, symbol=ticker,
                         quantity=quantity, price=price)
             print(f'adding {user} to database')
