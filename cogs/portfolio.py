@@ -3,6 +3,8 @@ import requests
 import sqlalchemy as sql
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from statistics import mean
+from pprint import pprint
 
 engine = sql.create_engine('sqlite:///portfolio.db', echo=True)
 Base = declarative_base()
@@ -31,6 +33,16 @@ Base.metadata.create_all(engine)
 # session.add(test)
 # session.commit()
 # session.close()
+# id_query = session.query(User.discord_id, User.symbol, User.quantity, User.price)
+    # filter(User.symbol == 'btc')
+# for discord_id, symbol, quantity, price in id_query:
+#     new_list = [int(n.price) for n in id_query]
+#     pprint(mean(new_list))
+#     from pdb import set_trace;
+#
+#     set_trace()
+#result1 = [r.symbol for r in id_query]
+
 
 
 class Portfolio(commands.Cog):
@@ -44,23 +56,35 @@ class Portfolio(commands.Cog):
     async def p(self, ctx, action, ticker=None, quantity=None, price=None):
         if action == 'positions':
             disc_id = str(ctx.message.author.id)
-            exists = session.query(
-                session.query(User).filter_by(discord_id=disc_id).exists()
-            ).scalar()
-            if exists is True:
-                if ticker is None:
-                    for discord_id, symbol, quantity, price, in session.query(User.discord_id, User.symbol,
-                                                                              User.quantity, User.price).\
-                                                                              filter(User.discord_id == disc_id):
-                        await ctx.send(f'{symbol.upper()} {quantity} {price}')
+            # exists = session.query(
+            #     session.query(User).filter_by(discord_id=disc_id).exists()
+            # ).scalar()
+            id_query = session.query(User.discord_id, User.symbol, User.quantity, User.price). \
+                filter(User.discord_id == disc_id)
+            symbol_query = session.query(User.discord_id, User.symbol, User.quantity, User.price). \
+                filter(User.discord_id == disc_id). \
+                filter(User.symbol == ticker)
+            result1 = [r.discord_id for r in id_query]
+            result2 = [r.symbol for r in symbol_query]
+
+            response = "```\r\n"
+            try:
+                if disc_id in result1:
+                    if ticker is None:
+                        for discord_id, symbol, quantity, price in id_query:
+                            avg = [int(n.price) for n in id_query]
+                            avg = mean(avg)
+                            response += f'{symbol.upper()} {quantity} {price} average cost: {avg}\r\n'
+                    elif ticker in result2:
+                        for discord_id, symbol, quantity, price in symbol_query:
+                            avg = [int(n.price) for n in symbol_query]
+                            avg = (mean(avg))
+                            response += f'{symbol.upper()} {quantity} {price} average cost: {avg}\r\n'
                 else:
-                    for discord_id, symbol, quantity, price, in session.query(User.discord_id, User.symbol,
-                                                                              User.quantity, User.price).\
-                                                                              filter(User.discord_id == disc_id).\
-                                                                              filter(User.symbol == ticker):
-                        await ctx.send(f'{symbol.upper()} + {quantity} + {price}')
-            else:
-                await ctx.send('You have no positions')
+                    response += 'You have no positions'
+            finally:
+                response += "```"
+            await ctx.send(response)
 
         elif action == 'add':
             if ticker in str(self.supported_coins):
