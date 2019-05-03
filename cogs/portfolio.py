@@ -4,9 +4,10 @@ import sqlalchemy as sql
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from statistics import mean
+from .cryptoticker import CryptoTicker
 from pprint import pprint
 
-engine = sql.create_engine('sqlite:///portfolio.db', echo=True)
+engine = sql.create_engine('sqlite:///portfolio.db')
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -34,15 +35,14 @@ Base.metadata.create_all(engine)
 # session.commit()
 # session.close()
 # id_query = session.query(User.discord_id, User.symbol, User.quantity, User.price)
-    # filter(User.symbol == 'btc')
+# filter(User.symbol == 'btc')
 # for discord_id, symbol, quantity, price in id_query:
 #     new_list = [int(n.price) for n in id_query]
 #     pprint(mean(new_list))
 #     from pdb import set_trace;
 #
 #     set_trace()
-#result1 = [r.symbol for r in id_query]
-
+# result1 = [r.symbol for r in id_query]
 
 
 class Portfolio(commands.Cog):
@@ -67,23 +67,29 @@ class Portfolio(commands.Cog):
             result1 = [r.discord_id for r in id_query]
             result2 = [r.symbol for r in symbol_query]
 
-            response = "```\r\n"
+            response = '```\n'
+            response += 'SYM QTY PRICE\n'
             try:
                 if disc_id in result1:
                     if ticker is None:
                         for discord_id, symbol, quantity, price in id_query:
-                            avg = [int(n.price) for n in id_query]
-                            avg = mean(avg)
-                            response += f'{symbol.upper()} {quantity} {price} average cost: {avg}\r\n'
+                            response += f'{symbol.upper()} {quantity}   {price}\n'
                     elif ticker in result2:
                         for discord_id, symbol, quantity, price in symbol_query:
-                            avg = [int(n.price) for n in symbol_query]
-                            avg = (mean(avg))
-                            response += f'{symbol.upper()} {quantity} {price} average cost: {avg}\r\n'
+                            response += f'{symbol.upper()} {quantity}   {price}\n'
                 else:
                     response += 'You have no positions'
             finally:
-                response += "```"
+                if ticker is None:
+                    avg = [int(n.price) for n in id_query]
+                    avg = mean(avg)
+                    response += f'${avg:,.2f} average cost.'
+                    response += '```'
+                elif ticker in result2:
+                    symbol_avg = [int(n.price) for n in symbol_query]
+                    symbol_avg = (mean(symbol_avg))
+                    response += f'${symbol_avg:,.2f} average cost.'
+                    response += '```'
             await ctx.send(response)
 
         elif action == 'add':
