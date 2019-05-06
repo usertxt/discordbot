@@ -8,7 +8,7 @@ from statistics import mean
 from .cryptoticker import CryptoTicker
 from pprint import pprint
 
-engine = sql.create_engine('sqlite:///portfolio.db')
+engine = sql.create_engine('sqlite:///portfolio.db', echo=True)
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -37,6 +37,7 @@ class Portfolio(commands.Cog):
         self.bot = bot
         self.config_ticker = self.bot.config["CRYPTOTICKER"]
         self.url = self.config_ticker["URL"]
+        self.base_currency = self.config_ticker["BASE_CURRENCY"]
         self.coin_list = requests.get(self.config_ticker["COIN_LIST"]).json()
         self.supported_currencies = requests.get(self.config_ticker["SUPPORTED_CURRENCIES"]).json()
 
@@ -59,9 +60,10 @@ class Portfolio(commands.Cog):
                 filter(User.coin == ticker)
             result1 = [r.discord_id for r in id_query]
             result2 = [r.coin for r in coin_query]
-            response = '```\n'
+            response = '```fix\n'
             try:
                 if disc_id in result1:
+                    response += f'{ticker.upper()} positions for {ctx.message.author.name}\n'
                     response += 'SYM QTY PRICE\n'
                     if ticker is None:
                         for discord_id, coin, symbol, quantity, price in id_query:
@@ -74,28 +76,25 @@ class Portfolio(commands.Cog):
                     response += '```'
             finally:
                 if ticker is None:
-                    coin = [n.coin for n in id_query]
-                    url_response = requests.get(self.url + coin + '&vs_currency=usd')
-                    fetched = url_response.json()
-                    current_price = fetched[0]['current_price']
-                    qty = [int(n.quantity) * current_price for n in id_query]
-                    qty = sum(qty)
-                    qty = str(qty)
                     avg = [int(n.price) for n in id_query]
                     avg = mean(avg)
-                    response += f'$Average cost: {avg:,.2f} Total worth: {qty}'
+                    response += f'Average cost: {avg:,.2f}'
                     response += '```'
 
                 elif ticker in result2:
                     url_response = requests.get(self.url + ticker + '&vs_currency=usd')
                     fetched = url_response.json()
                     current_price = fetched[0]['current_price']
-                    qty = [int(n.quantity) * current_price for n in coin_query]
-                    qty = sum(qty)
-                    qty = str(qty)
-                    symbol_avg = [int(n.price) for n in coin_query]
-                    symbol_avg = (mean(symbol_avg))
-                    response += f'$Average cost: {symbol_avg:,.2f} Total worth: {qty}'
+                    current_worth = [float(n.quantity) * current_price for n in coin_query]
+                    current_worth = sum(current_worth)
+                    total_price = [float(n.price) for n in coin_query]
+                    total_price = sum(total_price)
+                    if current_worth < total_price:
+                        loss = total_price - current_worth
+                        response += f'Total cost: {total_price:,.2f} Total worth: {current_worth:,.2f} Loss: {loss:,.2f}'
+                    elif current_worth > total_price:
+                        profit = current_worth - total_price
+                        response += f'Total cost: {total_price:,.2f} Total worth: {current_worth:,.2f} Profit: {profit:,.2f}'
                     response += '```'
             await ctx.send(response)
 
@@ -119,6 +118,9 @@ class Portfolio(commands.Cog):
 
         elif action == 'remove':
             disc_id = str(ctx.message.author.id)
+            if ticker == 'all':
+                session.query(User).filter(User.discord_id == disc_id).delete()
+                session.commit()
             for coin in self.coin_list:
                 if ticker == coin['symbol']:
                     ticker = coin['id']
@@ -131,7 +133,6 @@ class Portfolio(commands.Cog):
                         filter(User.price == price). \
                         delete()
                     session.commit()
-                    session.close()
                     await ctx.send(f'Removing {ticker} {quantity} {price} for {ctx.message.author.name}')
 
     @commands.command(pass_context=True)
