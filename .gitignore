@@ -2,6 +2,7 @@
 .idea/
 localconfig.json
 portfolio.db
+query.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
