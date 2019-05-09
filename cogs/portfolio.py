@@ -1,12 +1,8 @@
 from discord.ext import commands
 import requests
-import discord
 import sqlalchemy as sql
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from statistics import mean
-from .cryptoticker import CryptoTicker
-from pprint import pprint
 
 engine = sql.create_engine('sqlite:///portfolio.db', echo=False)
 Base = declarative_base()
@@ -62,17 +58,23 @@ class Portfolio(commands.Cog):
             result1 = [r.discord_id for r in id_query]
             result2 = [r.coin for r in coin_query]
 
-            url_response = requests.get(self.url + ticker + '&vs_currency=usd')
-            fetched = url_response.json()
-            symbol = fetched[0]['symbol']
-            current_price = fetched[0]['current_price']
-            current_worth = [float(n.quantity) * current_price for n in coin_query]
-            current_worth = sum(current_worth)
-            total_price = [float(n.price) for n in coin_query]
-            total_price = sum(total_price)
+            global current_worth
+            global total_price
+            global current_price
+            global symbol
+
+            for coin in result2:
+                url_response = requests.get(self.url + coin + '&vs_currency=usd')
+                fetched = url_response.json()
+                symbol = fetched[0]['symbol']
+                symbol = str(symbol)
+                current_price = fetched[0]['current_price']
+                current_worth = [float(n.quantity) * current_price for n in coin_query]
+                current_worth = sum(current_worth)
+                total_price = [float(n.price) for n in coin_query]
+                total_price = sum(total_price)
 
             response = '```fix\n'
-            response += f'{symbol.upper()}/USD: {current_price:,.2f}\n'
             try:
                 if disc_id in result1:
                     if ticker is None:
@@ -90,6 +92,7 @@ class Portfolio(commands.Cog):
                     response += 'You have no positions'
             finally:
                 if ticker in result2:
+                    response += f'{symbol.upper()}/USD: ${current_price:,.2f}\n'
                     if current_worth < total_price:
                         loss = total_price - current_worth
                         response += f'Total cost: {total_price:,.2f} Total worth: {current_worth:,.2f} Loss: {loss:,.2f}'
@@ -115,7 +118,7 @@ class Portfolio(commands.Cog):
                         session.close()
                         await ctx.send(f'Adding {ticker} {quantity} {price} for {ctx.message.author.name}')
             else:
-                await ctx.send(f'Error: {ticker} is not a supported currency')
+                await ctx.send(f'Error: {ticker.upper()} is not a supported currency')
 
         elif action == 'remove':
             disc_id = str(ctx.message.author.id)
@@ -135,46 +138,6 @@ class Portfolio(commands.Cog):
                         delete()
                     session.commit()
                     await ctx.send(f'Removing {ticker} {quantity} {price} for {ctx.message.author.name}')
-
-    @commands.command(pass_context=True)
-    async def positions(self, ctx):
-        disc_id = str(ctx.message.author.id)
-        exists = session.query(
-            session.query(User).filter_by(discord_id=disc_id).exists()
-        ).scalar()
-        if exists is True:
-            for discord_id, symbol, quantity, price, in session.query(User.discord_id, User.symbol, User.quantity,
-                                                                      User.price).filter(User.discord_id == disc_id):
-                await ctx.send(f'{symbol} + {quantity} + {price}')
-        else:
-            await ctx.send('You have no positions')
-
-    @commands.command(pass_context=True)
-    async def positionadd(self, ctx, ticker, quantity, price):
-        if ticker in str(self.coin_list):
-            user = User(name=ctx.message.author.name, discord_id=ctx.message.author.id, symbol=ticker,
-                        quantity=quantity, price=price)
-            print(f'adding {user} to database')
-            session.add(user)
-            session.commit()
-            session.close()
-            await ctx.send(f'Adding {ticker} {quantity} {price} for {ctx.message.author.name}')
-        else:
-            await ctx.send(f'Error: {ticker} is not a supported currency')
-
-    @commands.command(pass_context=True)
-    async def positionremove(self, ctx, ticker, quantity, price):
-        disc_id = str(ctx.message.author.id)
-        session.query(User).\
-            filter(User.name == str(ctx.message.author.name)).\
-            filter(User.discord_id == disc_id).\
-            filter(User.symbol == ticker).\
-            filter(User.quantity == quantity).\
-            filter(User.price == price).\
-            delete()
-        session.commit()
-        session.close()
-        await ctx.send(f'Removing {ticker} {quantity} {price} for {ctx.message.author.name}')
 
 
 def setup(bot):
