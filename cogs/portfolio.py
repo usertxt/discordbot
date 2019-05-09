@@ -8,7 +8,7 @@ from statistics import mean
 from .cryptoticker import CryptoTicker
 from pprint import pprint
 
-engine = sql.create_engine('sqlite:///portfolio.db', echo=True)
+engine = sql.create_engine('sqlite:///portfolio.db', echo=False)
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -53,17 +53,26 @@ class Portfolio(commands.Cog):
                 if ticker == coin['symbol']:
                     ticker = coin['id']
 
-            try_this = session.query(User).filter(User.discord_id == disc_id).all()
-            try_result = [r.coin for r in try_this]
-
             id_query = session.query(User.discord_id, User.coin, User.symbol, User.quantity, User.price). \
-                filter(User.discord_id == disc_id)
+                filter(User.discord_id == disc_id).\
+                all()
             coin_query = session.query(User.discord_id, User.coin, User.symbol, User.quantity, User.price). \
                 filter(User.discord_id == disc_id). \
                 filter(User.coin == ticker)
             result1 = [r.discord_id for r in id_query]
             result2 = [r.coin for r in coin_query]
+
+            url_response = requests.get(self.url + ticker + '&vs_currency=usd')
+            fetched = url_response.json()
+            symbol = fetched[0]['symbol']
+            current_price = fetched[0]['current_price']
+            current_worth = [float(n.quantity) * current_price for n in coin_query]
+            current_worth = sum(current_worth)
+            total_price = [float(n.price) for n in coin_query]
+            total_price = sum(total_price)
+
             response = '```fix\n'
+            response += f'{symbol.upper()}/USD: {current_price:,.2f}\n'
             try:
                 if disc_id in result1:
                     if ticker is None:
@@ -80,33 +89,7 @@ class Portfolio(commands.Cog):
                 else:
                     response += 'You have no positions'
             finally:
-                if ticker is None:
-                    for coin in try_result:
-                        url_response = requests.get(self.url + coin + '&vs_currency=usd')
-                        fetched = url_response.json()
-                        current_price = fetched[0]['current_price']
-                        current_worth = [float(n.quantity) * current_price for n in id_query]
-                        current_worth = sum(current_worth)
-                        total_price = [float(n.price) for n in id_query]
-                        total_price = sum(total_price)
-
-                        if current_worth < total_price:
-                            loss = total_price - current_worth
-                            response += f'Total cost: {total_price:,.2f} Total worth: {current_worth:,.2f} Loss: {loss:,.2f}'
-                            break
-                        elif current_worth > total_price:
-                            profit = current_worth - total_price
-                            response += f'Total cost: {total_price:,.2f} Total worth: {current_worth:,.2f} Profit: {profit:,.2f}'
-                            break
-
-                elif ticker in result2:
-                    url_response = requests.get(self.url + ticker + '&vs_currency=usd')
-                    fetched = url_response.json()
-                    current_price = fetched[0]['current_price']
-                    current_worth = [float(n.quantity) * current_price for n in coin_query]
-                    current_worth = sum(current_worth)
-                    total_price = [float(n.price) for n in coin_query]
-                    total_price = sum(total_price)
+                if ticker in result2:
                     if current_worth < total_price:
                         loss = total_price - current_worth
                         response += f'Total cost: {total_price:,.2f} Total worth: {current_worth:,.2f} Loss: {loss:,.2f}'
