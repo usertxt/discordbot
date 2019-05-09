@@ -4,7 +4,7 @@ import sqlalchemy as sql
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-engine = sql.create_engine('sqlite:///portfolio.db', echo=False)
+engine = sql.create_engine('sqlite:///portfolio.db', echo=True)
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -64,7 +64,7 @@ class Portfolio(commands.Cog):
             global symbol
 
             for coin in result2:
-                url_response = requests.get(self.url + coin + '&vs_currency=usd')
+                url_response = requests.get(self.url + coin)
                 fetched = url_response.json()
                 symbol = fetched[0]['symbol']
                 symbol = str(symbol)
