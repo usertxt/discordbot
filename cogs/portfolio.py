@@ -11,7 +11,7 @@ session = Session()
 
 
 class User(Base):
-    __tablename__ = 'users'
+    __tablename__ = 'positions'
     id = sql.Column(sql.Integer, sql.Sequence('user_id_seq'), primary_key=True)
     name = sql.Column(sql.String(50))
     discord_id = sql.Column(sql.String(50))
@@ -33,12 +33,12 @@ class Portfolio(commands.Cog):
         self.bot = bot
         self.config_ticker = self.bot.config["CRYPTOTICKER"]
         self.url = self.config_ticker["URL"]
-        self.base_currency = self.config_ticker["BASE_CURRENCY"]
         self.coin_list = requests.get(self.config_ticker["COIN_LIST"]).json()
         self.supported_currencies = requests.get(self.config_ticker["SUPPORTED_CURRENCIES"]).json()
 
     @commands.command(pass_context=True)
     async def p(self, ctx, action, ticker=None, quantity=None, price=None):
+        global current_worth, total_price, current_price, coin_symbol
         if action == 'positions':
             disc_id = str(ctx.message.author.id)
             # exists = session.query(
@@ -58,17 +58,10 @@ class Portfolio(commands.Cog):
             result1 = [r.discord_id for r in id_query]
             result2 = [r.coin for r in coin_query]
 
-            global current_worth
-            global total_price
-            global current_price
-            global symbol
-
             for coin in result2:
-                url_response = requests.get(self.url + coin)
-                fetched = url_response.json()
-                symbol = fetched[0]['symbol']
-                symbol = str(symbol)
-                current_price = fetched[0]['current_price']
+                response = requests.get(self.url + coin).json()
+                coin_symbol = response[0]['symbol']
+                current_price = response[0]['current_price']
                 current_worth = [float(n.quantity) * current_price for n in coin_query]
                 current_worth = sum(current_worth)
                 total_price = [float(n.price) for n in coin_query]
@@ -92,7 +85,7 @@ class Portfolio(commands.Cog):
                     response += 'You have no positions'
             finally:
                 if ticker in result2:
-                    response += f'{symbol.upper()}/USD: ${current_price:,.2f}\n'
+                    response += f'{coin_symbol.upper()}/USD: ${current_price:,.2f}\n'
                     if current_worth < total_price:
                         loss = total_price - current_worth
                         response += f'Total cost: {total_price:,.2f} Total worth: {current_worth:,.2f} Loss: {loss:,.2f}'
@@ -125,6 +118,7 @@ class Portfolio(commands.Cog):
             if ticker == 'all':
                 session.query(User).filter(User.discord_id == disc_id).delete()
                 session.commit()
+                await ctx.send(f'Removing all positions for {ctx.message.author.name}')
             for coin in self.coin_list:
                 if ticker == coin['symbol']:
                     ticker = coin['id']
