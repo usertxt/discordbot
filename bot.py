@@ -23,6 +23,7 @@ async def clearlog(ctx):
         logging.info(f'Log file cleared by {ctx.message.author}[{ctx.message.author.id}]')
     else:
         await ctx.send('You are not authorized to clear the log file')
+        logging.info(f'Attempted log file clear by {ctx.message.author}[{ctx.message.author.id}]')
 
 
 if __name__ == '__main__':
