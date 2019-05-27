@@ -6,25 +6,12 @@ import logging
 
 bot = commands.Bot(command_prefix='!')
 COGS_DIR = 'cogs'
-admin_id = 1234  # Replace 1234 with your unique discord id from ctx.message.author.id - Used for log clearing
 
 
 @bot.event
 async def on_ready():
     print('Bot is online')
-
-
-@bot.command()
-async def clearlog(ctx):
-    if ctx.message.author.id == admin_id:
-        with open('bot.log', 'w'):
-            pass
-        await ctx.send('Clearing log file')
-        logging.info(f'Log file cleared by {ctx.message.author}[{ctx.message.author.id}]')
-    else:
-        await ctx.send('You are not authorized to clear the log file')
-        logging.info(f'Attempted log file clear by {ctx.message.author}[{ctx.message.author.id}]')
-
+    logging.info('Bot is online')
 
 if __name__ == '__main__':
     logging.basicConfig(filename='bot.log', format=f'%(asctime)s:%(levelname)s:%(message)s', datefmt='%m-%d-%Y %H:%M:%S', level=logging.INFO)

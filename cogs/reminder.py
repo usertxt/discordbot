@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import asyncio
+import logging
 
 
 class Reminder(commands.Cog):
@@ -14,6 +15,8 @@ class Reminder(commands.Cog):
         for word in output[2:]:
             message += word
             message += ' '
+
+        logging.info(f'[RemindMe Prompted]: {ctx.message.author}: {time} {message}')
 
         if 's' in time:
             time = int(time.replace('s', ''))

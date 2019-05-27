@@ -31,6 +31,19 @@ Fiat is set to USD by default. Set your default fiat currency with:
 
 ## Cogs
 
+### Admin
+The admin cog includes functions that only you or someone you set as the admin will be able to invoke. You will
+need to insert your unique Discord ID into the config under DISCORD > ADMIN_ID. Here are two ways to get your 
+Discord ID:
+
+1. In Discord, go to Settings > Appearance > Enable Developer Mode. Right click on your username in any channel
+and select **Copy ID**.
+
+2. Set up the bot as you would normally without adding your ID to the config. Run the bot and attempt to use the
+**clearlog** command. By invoking the command, you have added an entry into the log with your information. The
+ information will appear as **username#1234[YOUR_ID]**. Open the log and copy your ID into the bot's config.
+ Rerun the bot.
+
 ### CryptoTicker
 CryptoTicker uses CoinGecko's API to fetch cryptocurrency prices.
 

@@ -1,17 +1,18 @@
 {
   "DISCORD": {
-    "TOKEN": "YOUR_TOKEN"
+    "TOKEN": "YOUR_TOKEN",
+    "ADMIN_ID": "YOUR_DISCORD_ID"
+  },
+    "TWITSTREAM": {
+    "CONSUMER_KEY": "YOUR_CONSUMER_KEY",
+    "CONSUMER_SECRET": "YOUR_CONSUMER_SECRET",
+    "TOKEN_KEY": "YOUR_ACCESS_KEY",
+    "TOKEN_SECRET": "YOUR_ACCESS_SECRET"
   },
   "CRYPTOTICKER": {
     "BASE_CURRENCY": "usd",
     "URL": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=",
     "COIN_LIST": "https://api.coingecko.com/api/v3/coins/list",
     "SUPPORTED_CURRENCIES": "https://api.coingecko.com/api/v3/simple/supported_vs_currencies"
-  },
-  "TWITSTREAM": {
-    "CONSUMER_KEY": "YOUR_CONSUMER_KEY",
-    "CONSUMER_SECRET": "YOUR_CONSUMER_SECRET",
-    "TOKEN_KEY": "YOUR_ACCESS_KEY",
-    "TOKEN_SECRET": "YOUR_ACCESS_SECRET"
   }
 }
