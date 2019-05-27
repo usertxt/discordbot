@@ -3,6 +3,7 @@
 localconfig.json
 portfolio.db
 query.py
+bot-dev.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

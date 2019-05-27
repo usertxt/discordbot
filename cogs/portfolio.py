@@ -4,7 +4,7 @@ import sqlalchemy as sql
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-engine = sql.create_engine('sqlite:///portfolio.db', echo=True)
+engine = sql.create_engine('sqlite:///portfolio.db', echo=False)
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -41,9 +41,6 @@ class Portfolio(commands.Cog):
         global current_worth, total_price, current_price, coin_symbol
         if action == 'positions':
             disc_id = str(ctx.message.author.id)
-            # exists = session.query(
-            #     session.query(User).filter_by(discord_id=disc_id).exists()
-            # ).scalar()
 
             for coin in self.coin_list:
                 if ticker == coin['symbol']:

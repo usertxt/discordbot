@@ -1,6 +1,7 @@
 from discord.ext import commands
 from twitter import *
 import asyncio
+import logging
 
 
 class TwitStream(commands.Cog):
@@ -19,7 +20,7 @@ class TwitStream(commands.Cog):
         if count is None:
             count = 1
 
-        print(f'[TwitStream Prompted]: {ctx.message.author}: twit {screen_name} {count}')
+        logging.info(f'[TwitStream Prompted]: {ctx.message.author}: twit {screen_name} {count}')
 
         if int(count) > 150:
             async with ctx.typing():
@@ -35,7 +36,7 @@ class TwitStream(commands.Cog):
             async with ctx.typing():
                 await asyncio.sleep(1)
                 await ctx.send(f'https://twitter.com/{screen_name}/status/{twit_id}')
-                print(f'[TwitStream Returned]: https://twitter.com/{screen_name}/status/{twit_id}')
+                logging.info(f'[TwitStream Returned]: https://twitter.com/{screen_name}/status/{twit_id}')
                 await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
 
 
