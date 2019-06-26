@@ -30,7 +30,7 @@ class TwitStream(commands.Cog):
         else:
             num = int(count) - 1
 
-            data = self.t.statuses.user_timeline(screen_name=screen_name, count=count, tweet_mode="extended", exclude_replies=True)
+            data = self.t.statuses.user_timeline(screen_name=screen_name, count=count, tweet_mode="extended")
             twit_id = data[num]["id"]
 
             async with ctx.typing():
