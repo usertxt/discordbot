@@ -1,7 +1,7 @@
 # usertxt's Discord Bot
 A Discord bot
 
-Written in Python 3.7.2
+Written in Python 3.7.3
 
 ## Installation
 
@@ -81,6 +81,14 @@ The basecurrency command allows you to use the bot to change your default base c
 !basecurrency aud
 ```
 
+### StockTicker
+StockTicker uses the Alpha Vantage API to fetch stock quotes. You will need you own API key to run this cog. Get yours for free at https://www.alphavantage.co/
+
+**Usage:**
+```
+!quote <ticker>
+```
+
 ### TwitStream
 TwitStream fetches user's tweets and relays them to your Discord channel.
 
@@ -94,4 +102,4 @@ The following command will fetch a tweet from the user's timeline:
 !twit <screen_name> [count]
 ```
 
->The optional count parameter will return the user's tweet based on order the tweet is in their timeline. None or 1 is the most recent tweet, and 2 would be the user's second most recent tweet, etc.
+>The optional count parameter will return the user's tweet based on the order the tweet is in their timeline. None or 1 is the most recent tweet, and 2 would be the user's second most recent tweet, etc.
