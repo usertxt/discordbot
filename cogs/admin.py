@@ -8,7 +8,7 @@ class Admin(commands.Cog):
         self.config = self.bot.config["DISCORD"]
         self.admin_id = int(self.config["ADMIN_ID"])
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def clearlog(self, ctx):
         if ctx.message.author.id == self.admin_id:
             with open('bot.log', 'w'):
@@ -19,7 +19,7 @@ class Admin(commands.Cog):
             await ctx.send('You are not authorized to clear the log file')
             logging.info(f'[Admin]: Attempted log file clear by {ctx.message.author}[{ctx.message.author.id}]')
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def reload(self, ctx, module):
         if ctx.message.author.id == self.admin_id:
             try:
