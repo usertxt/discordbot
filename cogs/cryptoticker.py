@@ -99,7 +99,10 @@ class CryptoTicker(commands.Cog):
                 fetched = response.json()
                 symbol = fetched[0]['symbol']
                 current_price = fetched[0]['current_price']
-                formatted_price = '{0:,.4f}'.format(current_price)
+                formatted_price = f'{current_price:,.2f}'
+                if formatted_price.startswith('0'):
+                    formatted_price = f'{current_price:,.4f}'
+
                 async with ctx.typing():
                     await asyncio.sleep(1)
                     await ctx.send(symbol.upper() + '/' + base.upper() + ': ' + currency_symbol + str(formatted_price))
