@@ -39,6 +39,24 @@ class TwitStream(commands.Cog):
                 logging.info(f'[TwitStream Returned]: https://twitter.com/{screen_name}/status/{twit_id}')
                 await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
 
+                if data[num]['full_text'].endswith("..."):
+                    num2 = int(count) - 2
+                    twit_id2 = data[num2]['id']
+
+                    async with ctx.typing():
+                        await asyncio.sleep(3)
+                        await ctx.send(f'https://twitter.com/{screen_name}/status/{twit_id2}')
+                        logging.info(f'[TwitStream Returned]: https://twitter.com/{screen_name}/status/{twit_id2}')
+
+                if data[num2]['full_text'].endswith("..."):
+                    num3 = int(count) - 3
+                    twit_id3 = data[num3]['id']
+
+                    async with ctx.typing():
+                        await asyncio.sleep(5)
+                        await ctx.send(f'https://twitter.com/{screen_name}/status/{twit_id3}')
+                        logging.info(f'[TwitStream Returned]: https://twitter.com/{screen_name}/status/{twit_id3}')
+
 
 def setup(bot):
     bot.add_cog(TwitStream(bot))
