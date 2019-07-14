@@ -14,7 +14,12 @@ async def on_ready():
     logging.info('Bot is online')
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='bot.log', format=f'%(asctime)s:%(levelname)s:%(message)s', datefmt='%m-%d-%Y %H:%M:%S', level=logging.INFO)
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.INFO)
+    handler = logging.FileHandler('bot.log', 'a', 'utf-8')
+    handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(message)s', '%m-%d-%Y %H:%M:%S'))
+    root_logger.addHandler(handler)
+
     bot.configpath = 'config.json'
     bot.config = json.load(open(bot.configpath))
     token = bot.config["DISCORD"]["TOKEN"]
