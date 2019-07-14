@@ -102,6 +102,8 @@ class CryptoTicker(commands.Cog):
                 formatted_price = f'{current_price:,.2f}'
                 if formatted_price.startswith('0'):
                     formatted_price = f'{current_price:,.4f}'
+                if base == 'btc':
+                    formatted_price = f'{current_price:,.8f}'
 
                 async with ctx.typing():
                     await asyncio.sleep(1)
