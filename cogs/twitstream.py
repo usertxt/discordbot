@@ -31,7 +31,8 @@ class TwitStream(commands.Cog):
             num = int(count) - 1
 
             data = self.t.statuses.user_timeline(screen_name=screen_name, count=count, tweet_mode="extended")
-            twit_id = data[num]["id"]
+            twit_id = data[num]['id']
+            num_cont = num
 
             async with ctx.typing():
                 await asyncio.sleep(1)
@@ -39,23 +40,17 @@ class TwitStream(commands.Cog):
                 logging.info(f'[TwitStream Returned]: https://twitter.com/{screen_name}/status/{twit_id}')
                 await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
 
-                if data[num]['full_text'].endswith("..."):
-                    num2 = int(count) - 2
-                    twit_id2 = data[num2]['id']
+            while data[num]['full_text'].endswith('...'):
+                num_cont -= 1
+                twit_id_cont = data[num_cont]['id']
 
-                    async with ctx.typing():
-                        await asyncio.sleep(3)
-                        await ctx.send(f'https://twitter.com/{screen_name}/status/{twit_id2}')
-                        logging.info(f'[TwitStream Returned]: https://twitter.com/{screen_name}/status/{twit_id2}')
+                async with ctx.typing():
+                    await asyncio.sleep(3)
+                    await ctx.send(f'https://twitter.com/{screen_name}/status/{twit_id_cont}')
+                    logging.info(f'[TwitStream Returned]: https://twitter.com/{screen_name}/status/{twit_id_cont}')
 
-                if data[num2]['full_text'].endswith("..."):
-                    num3 = int(count) - 3
-                    twit_id3 = data[num3]['id']
-
-                    async with ctx.typing():
-                        await asyncio.sleep(5)
-                        await ctx.send(f'https://twitter.com/{screen_name}/status/{twit_id3}')
-                        logging.info(f'[TwitStream Returned]: https://twitter.com/{screen_name}/status/{twit_id3}')
+                if data[num_cont]['full_text'].endswith('...') is False:
+                    break
 
 
 def setup(bot):
