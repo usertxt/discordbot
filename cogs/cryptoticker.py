@@ -16,12 +16,10 @@ class CryptoTicker(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.config = self.bot.config["CRYPTOTICKER"]
-
         self.base_currency = self.config["BASE_CURRENCY"]
         self.url = self.config["URL"]
         self.coin_list = requests.get(self.config["COIN_LIST"]).json()
         self.supported_currencies = requests.get(self.config["SUPPORTED_CURRENCIES"]).json()
-
         self.this_extension = 'cogs.cryptoticker'
 
     @commands.Cog.listener()
@@ -95,10 +93,9 @@ class CryptoTicker(commands.Cog):
                     if ticker == coin['symbol']:
                         ticker = coin['id']
 
-                response = requests.get(self.url + ticker + '&vs_currency=' + base)
-                fetched = response.json()
-                symbol = fetched[0]['symbol']
-                current_price = fetched[0]['current_price']
+                response = requests.get(self.url + ticker + '&vs_currency=' + base).json()
+                symbol = response[0]['symbol']
+                current_price = response[0]['current_price']
                 formatted_price = f'{current_price:,.2f}'
                 if formatted_price.startswith('0'):
                     formatted_price = f'{current_price:,.4f}'
