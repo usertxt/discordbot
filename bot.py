@@ -20,8 +20,8 @@ if __name__ == '__main__':
     handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(message)s', '%m-%d-%Y %H:%M:%S'))
     root_logger.addHandler(handler)
 
-    bot.configpath = 'config.json'
-    bot.config = json.load(open(bot.configpath))
+    bot.config_path = 'config.json'
+    bot.config = json.load(open(bot.config_path))
     token = bot.config["DISCORD"]["TOKEN"]
 
     for extension in [f.replace('.py', '') for f in listdir(COGS_DIR) if isfile(join(COGS_DIR, f))]:
