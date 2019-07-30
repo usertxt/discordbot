@@ -34,7 +34,7 @@ class TwitStream(commands.Cog):
 
             async with ctx.typing():
                 await asyncio.sleep(1)
-                await ctx.send(f'https://twitter.com/{screen_name}/status/{twit_id}')
+                await ctx.send(f'https://twitter.com/{screen_name.lower()}/status/{twit_id}')
                 logging.info(f'[TwitStream Returned]: https://twitter.com/{screen_name}/status/{twit_id}')
                 await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
 
@@ -44,7 +44,7 @@ class TwitStream(commands.Cog):
 
                 async with ctx.typing():
                     await asyncio.sleep(3)
-                    await ctx.send(f'https://twitter.com/{screen_name}/status/{twit_id}')
+                    await ctx.send(f'https://twitter.com/{screen_name.lower()}/status/{twit_id}')
                     logging.info(f'[TwitStream Returned]: https://twitter.com/{screen_name}/status/{twit_id}')
 
 
