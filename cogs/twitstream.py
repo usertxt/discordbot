@@ -2,6 +2,7 @@ from discord.ext import commands
 from twitter import *
 import asyncio
 import logging
+import re
 
 
 class TwitStream(commands.Cog):
@@ -46,6 +47,10 @@ class TwitStream(commands.Cog):
                     await asyncio.sleep(3)
                     await ctx.send(f'https://twitter.com/{screen_name.lower()}/status/{twit_id}')
                     logging.info(f'[TwitStream Returned]: https://twitter.com/{screen_name}/status/{twit_id}')
+
+            if "https://t.co" in data[num]['full_text'] and data[num]['entities'].get('media') is None:
+                url = re.search("(?P<url>https?://[^\s]+)", data[num]['full_text']).group("url")
+                await ctx.send(url)
 
 
 def setup(bot):
