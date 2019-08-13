@@ -82,7 +82,8 @@ The basecurrency command allows you to use the bot to change your default base c
 ```
 
 ### StockTicker
-StockTicker uses the Alpha Vantage API to fetch stock quotes. You will need you own API key to run this cog. Get yours for free at https://www.alphavantage.co/
+StockTicker uses the Alpha Vantage API to fetch stock quotes. You will need your own API key to run this cog. Get yours
+for free at https://www.alphavantage.co/
 
 **Usage:**
 ```
@@ -92,7 +93,8 @@ StockTicker uses the Alpha Vantage API to fetch stock quotes. You will need you 
 ### TwitStream
 TwitStream fetches user's tweets and relays them to your Discord channel.
 
-You will need your own Twitter Developer account  and your own keys for this cog to work. You can apply for a Twitter dev account here: https://developer.twitter.com/
+You will need your own Twitter Developer account and your own keys for this cog to work. You can apply for a Twitter
+dev account here: https://developer.twitter.com/
 
 **Commands:**
 
