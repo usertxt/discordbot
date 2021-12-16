@@ -1,7 +1,7 @@
 # usertxt's Discord Bot
 A Discord bot
 
-Written in Python 3.7.3
+Written in Python 3.9.0
 
 ## Installation
 

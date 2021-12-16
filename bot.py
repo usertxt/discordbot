@@ -1,12 +1,13 @@
 from discord.ext import commands
+from discord_slash import SlashCommand, SlashContext
 import json
 from os import listdir
 from os.path import isfile, join
 import logging
 
-bot = commands.Bot(command_prefix='!')
+bot = commands.Bot(command_prefix='$')
 COGS_DIR = 'cogs'
-
+slash = SlashCommand(bot, sync_commands=True, sync_on_cog_reload=True)
 
 @bot.event
 async def on_ready():
