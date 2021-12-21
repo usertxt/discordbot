@@ -1,6 +1,7 @@
 # My additions
 .idea/
 localconfig.json
+config.json
 portfolio.db
 query.py
 bot-dev.py

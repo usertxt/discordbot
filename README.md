@@ -18,6 +18,8 @@ Written in Python 3.9.0
 
 Configure the app using **config.json**
 
+Rename **config.json_sample** to **config.json**
+
 Add your bot's token to:
 ```
 "TOKEN": "YOUR_TOKEN"
