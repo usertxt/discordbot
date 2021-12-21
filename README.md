@@ -31,6 +31,10 @@ Fiat is set to USD by default. Set your default fiat currency with:
 ```
 >Note: Use the lowercase three letter symbol for your BASE_CURRENCY currency or the API won't fetch the information properly.
 
+**IMPORTANT**
+
+Always back up your config file, the changes that are made on the repository might replace your local config file with the default one. Some steps have been taken to help mitigate this problem, however you should always keep your API keys and tokens safely backed up elsewhere.
+
 ## Cogs
 
 ### Admin
