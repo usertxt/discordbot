@@ -22,6 +22,8 @@ class CryptoTicker(commands.Cog):
         self.supported_currencies = requests.get(self.config["SUPPORTED_CURRENCIES"]).json()
         self.this_extension = 'cogs.cryptoticker'
 
+    guild_ids = json.load(open("config.json"))["DISCORD"]["GUILD_IDS"]
+
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
@@ -100,7 +102,7 @@ class CryptoTicker(commands.Cog):
             logging.info(f'[CryptoTicker Error]: User: {ctx.author} Error: {base}'
                             f' is not a supported currency')
 
-    @cog_ext.cog_slash(name="basecurrency")
+    @cog_ext.cog_slash(name="basecurrency", description="Change base currency", guild_ids=guild_ids)
     async def slash_basecurrency(self, ctx: SlashContext, new_base):
         await self.basecurrency(ctx, new_base)
 
@@ -108,7 +110,7 @@ class CryptoTicker(commands.Cog):
     async def command_basecurrency(self, ctx, new_base):
         await self.basecurrency(ctx, new_base)
 
-    @cog_ext.cog_slash(name="price")
+    @cog_ext.cog_slash(name="price", description="Check price of selected crypto", guild_ids=guild_ids)
     async def slash_price(self, ctx: SlashContext, ticker, base=None):
         await self.price(ctx, ticker, base)
 

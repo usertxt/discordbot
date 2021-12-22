@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord.ext.commands.bot import Bot
 from discord_slash import cog_ext, SlashContext
 from discord_slash.client import SlashCommand
 from twitter import *
@@ -6,6 +7,7 @@ import asyncio
 import logging
 import random
 import re
+import json
 
 
 class TwitStream(commands.Cog):
@@ -18,6 +20,8 @@ class TwitStream(commands.Cog):
         self.token_secret = self.config["TOKEN_SECRET"]
 
         self.t = Twitter(auth=OAuth(self.token_key, self.token_secret, self.consumer_key, self.consumer_secret))
+
+    guild_ids = json.load(open("config.json"))["DISCORD"]["GUILD_IDS"]
 
     async def twit(self, ctx, screen_name, count=None):
         if count is None:
@@ -48,7 +52,7 @@ class TwitStream(commands.Cog):
                 await asyncio.sleep(3)
                 await ctx.send(url)
 
-    @cog_ext.cog_slash(name="twit")
+    @cog_ext.cog_slash(name="twit", description="Get tweets by Twitter username", guild_ids=guild_ids)
     async def slash_twit(self, ctx: SlashContext, screen_name, count=None):
         await self.twit(ctx, screen_name, count)
 
