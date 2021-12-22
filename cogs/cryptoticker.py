@@ -1,5 +1,5 @@
 from discord.ext import commands
-import asyncio
+from discord_slash import cog_ext, SlashContext
 import requests
 import json
 import logging
@@ -37,17 +37,13 @@ class CryptoTicker(commands.Cog):
                 logging.info(f'[CryptoTicker Prompted]: {ctx.message.author}: price')
                 logging.info('[CryptoTicker Returned]: price usage message')
 
-    @commands.command(pass_context=True)
     async def basecurrency(self, ctx, new_base):
-        logging.info(f'[CryptoTicker Prompted]: {ctx.message.author}: basecurrency {new_base}')
+        logging.info(f'[CryptoTicker Prompted]: {ctx.author}: basecurrency {new_base}')
 
         new_base = new_base.lower()
         if new_base == self.base_currency:
-            async with ctx.typing():
-                await asyncio.sleep(1)
-                await ctx.send(f'Default base currency is already set to {new_base.upper()}')
-                logging.info(f'[CryptoTicker Returned]: Default base currency is already set to {new_base.upper()}')
-                await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
+            await ctx.send(f'Default base currency is already set to {new_base.upper()}')
+            logging.info(f'[CryptoTicker Returned]: Default base currency is already set to {new_base.upper()}')
         elif new_base in self.supported_currencies:
             try:
                 self.bot.config["CRYPTOTICKER"]["BASE_CURRENCY"] = new_base
@@ -57,31 +53,21 @@ class CryptoTicker(commands.Cog):
                 self.bot.unload_extension(self.this_extension)
                 self.bot.load_extension(self.this_extension)
 
-                async with ctx.typing():
-                    await asyncio.sleep(1)
-                    await ctx.send(f'Changing default base currency to {new_base.upper()}')
-                    logging.info(f'[CryptoTicker Reload]: Config update - BASE_CURRENCY is now {new_base.upper()}')
-                    await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
+                await ctx.send(f'Changing default base currency to {new_base.upper()}')
+                logging.info(f'[CryptoTicker Reload]: Config update - BASE_CURRENCY is now {new_base.upper()}')
 
             except Exception as error:
-                async with ctx.typing():
-                    await asyncio.sleep(1)
-                    await ctx.send(f'basecurrency command returned with error: {error}')
-                    logging.info(f'[CryptoTicker Error]: basecurrency command returned with error: {error}')
-                    await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
+                await ctx.send(f'basecurrency command returned with error: {error}')
+                logging.info(f'[CryptoTicker Error]: basecurrency command returned with error: {error}')
         else:
-            async with ctx.typing():
-                await asyncio.sleep(1)
-                await ctx.send(f'CryptoTicker Error: {new_base.upper()} is not a supported currency')
-                logging.info(f'[CryptoTicker Error]: {new_base.upper()} is not a supported currency')
-                await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
+            await ctx.send(f'CryptoTicker Error: {new_base.upper()} is not a supported currency')
+            logging.info(f'[CryptoTicker Error]: {new_base.upper()} is not a supported currency')
 
-    @commands.command(pass_context=True)
     async def price(self, ctx, ticker, base=None):
         if base is None:
             base = self.base_currency
 
-        logging.info(f'[CryptoTicker Prompted]: {ctx.message.author}: price {ticker} {base}')
+        logging.info(f'[CryptoTicker Prompted]: {ctx.author}: price {ticker} {base}')
 
         currency_symbol = currency_symbol_dict.get(base.upper(), '$')
         ticker = ticker.lower()
@@ -102,26 +88,33 @@ class CryptoTicker(commands.Cog):
                 if base == 'btc':
                     formatted_price = f'{current_price:,.8f}'
 
-                async with ctx.typing():
-                    await asyncio.sleep(1)
-                    await ctx.send(f'{symbol.upper()}/{base.upper()}: {currency_symbol}{formatted_price}')
-                    logging.info(f'[CryptoTicker Returned]: {symbol.upper()}/{base.upper()}:'
-                                 f' {currency_symbol}{formatted_price}')
-                    await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
+                await ctx.send(f'{symbol.upper()}/{base.upper()}: {currency_symbol}{formatted_price}')
+                logging.info(f'[CryptoTicker Returned]: {symbol.upper()}/{base.upper()}:'
+                                f' {currency_symbol}{formatted_price}')
 
             except Exception as error:
-                async with ctx.typing():
-                    await asyncio.sleep(1)
-                    await ctx.send(f'price command returned with error: {error}')
-                    logging.info(f'[CryptoTicker Error]: price command returned with error: {error}')
-                    await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
+                await ctx.send(f'price command returned with error: {error}')
+                logging.info(f'[CryptoTicker Error]: price command returned with error: {error}')
         else:
-            async with ctx.typing():
-                await asyncio.sleep(1)
-                await ctx.send(f'CryptoTicker Error: {base.upper()} is not a supported currency')
-                logging.info(f'[CryptoTicker Error]: User: {ctx.message.author} Error: {base}'
-                             f' is not a supported currency')
-                await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
+            await ctx.send(f'CryptoTicker Error: {base.upper()} is not a supported currency')
+            logging.info(f'[CryptoTicker Error]: User: {ctx.author} Error: {base}'
+                            f' is not a supported currency')
+
+    @cog_ext.cog_slash(name="basecurrency")
+    async def slash_basecurrency(self, ctx: SlashContext, new_base):
+        await self.basecurrency(ctx, new_base)
+
+    @commands.command(name="basecurrency", pass_context=True)
+    async def command_basecurrency(self, ctx, new_base):
+        await self.basecurrency(ctx, new_base)
+
+    @cog_ext.cog_slash(name="price")
+    async def slash_price(self, ctx: SlashContext, ticker, base=None):
+        await self.price(ctx, ticker, base)
+
+    @commands.command(name="price", pass_context=True)
+    async def command_price(self, ctx, ticker, base=None):
+        await self.price(ctx, ticker, base)
 
 
 def setup(bot):
