@@ -1,4 +1,4 @@
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord.ext.commands.bot import Bot
 from discord_slash import cog_ext, SlashContext
 from discord_slash.client import SlashCommand
@@ -18,8 +18,12 @@ class TwitStream(commands.Cog):
         self.consumer_secret = self.config["CONSUMER_SECRET"]
         self.token_key = self.config["TOKEN_KEY"]
         self.token_secret = self.config["TOKEN_SECRET"]
+        self.channel_id = self.config["CHANNEL_ID"]
+        self.top_followed = self.config["TOP_FOLLOWED"]
 
         self.t = Twitter(auth=OAuth(self.token_key, self.token_secret, self.consumer_key, self.consumer_secret))
+
+        self.tf_bg_task.start()
 
     guild_ids = json.load(open("config.json"))["DISCORD"]["GUILD_IDS"]
 
@@ -60,6 +64,19 @@ class TwitStream(commands.Cog):
     async def command_twit(self, ctx, screen_name, count=None):
         await self.twit(ctx, screen_name, count)
 
+    @tasks.loop(seconds=43200)
+    async def tf_bg_task(self):
+        channel = self.bot.get_channel(self.channel_id)
+        for x in self.top_followed:
+            async with channel.typing():
+                await channel.send(f"Latest tweet from {x}")
+                await asyncio.sleep(1)
+                await self.twit(channel, screen_name=x)
+                await asyncio.sleep(3)
+
+    @tf_bg_task.before_loop
+    async def before_my_task(self):
+        await self.bot.wait_until_ready()
 
 def setup(bot):
     bot.add_cog(TwitStream(bot))
