@@ -3,6 +3,7 @@ from discord.ext.commands.bot import Bot
 from discord_slash import cog_ext, SlashContext
 from discord_slash.client import SlashCommand
 from twitter import *
+from itertools import cycle
 import asyncio
 import logging
 import random
@@ -20,6 +21,7 @@ class TwitStream(commands.Cog):
         self.token_secret = self.config["TOKEN_SECRET"]
         self.channel_id = self.config["CHANNEL_ID"]
         self.top_followed = self.config["TOP_FOLLOWED"]
+        self.tf_pool = cycle(self.top_followed)
 
         self.t = Twitter(auth=OAuth(self.token_key, self.token_secret, self.consumer_key, self.consumer_secret))
 
@@ -64,19 +66,24 @@ class TwitStream(commands.Cog):
     async def command_twit(self, ctx, screen_name, count=None):
         await self.twit(ctx, screen_name, count)
 
+    def tf_next(self):
+        return next(self.tf_pool)
+
     @tasks.loop(seconds=43200)
     async def tf_bg_task(self):
         channel = self.bot.get_channel(self.channel_id)
-        for x in self.top_followed:
-            async with channel.typing():
-                await channel.send(f"Latest tweet from {x}")
-                await asyncio.sleep(1)
-                await self.twit(channel, screen_name=x)
-                await asyncio.sleep(3)
+        tf_name = self.tf_next()
+
+        async with channel.typing():
+            await channel.send(f"Latest tweet from {tf_name}")
+            await asyncio.sleep(1)
+            await self.twit(channel, screen_name=tf_name)
+            await asyncio.sleep(3)
 
     @tf_bg_task.before_loop
     async def before_my_task(self):
         await self.bot.wait_until_ready()
+
 
 def setup(bot):
     bot.add_cog(TwitStream(bot))
