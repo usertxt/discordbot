@@ -2,8 +2,7 @@
 A Discord bot
 
 Written in Python 3.9.0
-
-## Table of Contents  
+ 
 * [Installation](#installation)  
 * [Configure](#configure)  
 * [Cogs](#cogs)  
@@ -173,7 +172,7 @@ Next, install the requirements:
 pip install -r requirements.txt
 ```
 
-Finally, run:
+Finally, assuming your config.json is all set up, run:
 ```
 python bot.py
 ```
