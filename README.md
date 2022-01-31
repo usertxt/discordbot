@@ -3,7 +3,7 @@ A Discord bot
 
 Written in Python 3.9.0
 
-## Installation
+# Installation
 
 **Install required packages**
 
@@ -14,7 +14,7 @@ Written in Python 3.9.0
 ```
 
 
-## Configure
+# Configure
 
 Configure the app using **config.json**
 
@@ -35,9 +35,9 @@ Fiat is set to USD by default. Set your default fiat currency with:
 
 Always back up your config file, the changes that are made on the repository might replace your local config file with the default one. Some steps have been taken to help mitigate this problem, however you should always keep your API keys and tokens safely backed up elsewhere.
 
-## Cogs
+# Cogs
 
-### Admin
+## Admin
 The admin cog includes functions that only you or someone you set as the admin will be able to invoke. You will
 need to insert your unique Discord ID into the config under DISCORD > ADMIN_ID. Here are two ways to get your 
 Discord ID:
@@ -50,12 +50,11 @@ and select **Copy ID**.
  information will appear as **username#1234[YOUR_ID]**. Open the log and copy your ID into the bot's config.
  Rerun the bot.
 
-### CryptoTicker
+## CryptoTicker
 CryptoTicker uses CoinGecko's API to fetch cryptocurrency prices.
 
-**Commands:**
+**Usage:**
 
-In the Discord chat channel your bot has joined, use the following command to prompt the bot:
 ```
 !price <ticker> [base_currency] 
 ```
@@ -87,7 +86,7 @@ The basecurrency command allows you to use the bot to change your default base c
 !basecurrency aud
 ```
 
-### StockTicker
+## StockTicker
 StockTicker uses the Alpha Vantage API to fetch stock quotes. You will need your own API key to run this cog. Get yours
 for free at https://www.alphavantage.co/
 
@@ -96,7 +95,7 @@ for free at https://www.alphavantage.co/
 !quote <ticker>
 ```
 
-### TwitStream
+## TwitStream
 TwitStream fetches user's tweets and relays them to your Discord channel.
 
 You will need your own Twitter Developer account and your own keys for this cog to work. You can apply for a Twitter
@@ -111,3 +110,27 @@ The following command will fetch a tweet from the user's timeline:
 ```
 
 >The optional count parameter will return the user's tweet based on the order the tweet is in their timeline. None or 1 is the most recent tweet, and 2 would be the user's second most recent tweet, etc.
+
+## Dictionary
+This cog adds the **dict** and **urban** commands.
+
+**Usage:**  
+
+```
+!dict <search_term>
+```
+
+The following examples apply to both commands within the cog
+
+For single word inquiries:
+
+```
+!dict hello
+```
+
+For multiple word inquiries:
+
+```
+!dict "hello world"
+```
+>When using the slash commands for this cog, the quotes are not necessary
