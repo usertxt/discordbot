@@ -3,6 +3,18 @@ A Discord bot
 
 Written in Python 3.9.0
 
+## Table of Contents  
+* [Installation](#installation)  
+* [Configure](#configure)  
+* [Cogs](#cogs)  
+  * [Admin](#admin)  
+  * [CryptoTicker](#cryptoticker)  
+  * [StockTicker](#stockticker)  
+  * [TwitStream](#twitstream)  
+  * [Dictionary](#dictionary) 
+* [Running](#running)
+
+
 # Installation
 
 **Install required packages**
@@ -133,4 +145,35 @@ For multiple word inquiries:
 ```
 !dict "hello world"
 ```
->When using the slash commands for this cog, the quotes are not necessary
+>Note: When using the slash commands for this cog, the quotes are not necessary
+
+# Running
+It is highly recommended that you use a virtual environment for setting up and running this bot. After cloning this project and entering the directory you cloned to, run:
+```
+python -m virtualenv venv
+```
+>This will create a folder inside your cloned directory named "venv" with all the necessary Python files to run a separate source for the bot to run. Any pip installs while the virtual environment is activated will be installed here.  
+
+Next you will need to activate the virtualenv:  
+
+On Linux:
+```
+source venv/bin/activate
+```
+
+On Windows:
+```
+venv\Scripts\activate
+```
+
+>After successfully activating the virtual environment, you will see (venv) on your command line.
+
+Next, install the requirements:
+```
+pip install -r requirements.txt
+```
+
+Finally, run:
+```
+python bot.py
+```
