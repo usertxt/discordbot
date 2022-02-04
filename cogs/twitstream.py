@@ -53,7 +53,7 @@ class TwitStream(commands.Cog):
     async def slash_twit(self, ctx: SlashContext, screen_name, count=None):
         await self.twit(ctx, screen_name, count)
 
-    @commands.command(name="twit", pass_context=True)
+    @commands.command(name="twit", pass_context=True, brief="Get tweets by Twitter username")
     async def command_twit(self, ctx, screen_name, count=None):
         await self.twit(ctx, screen_name, count)
 

@@ -106,7 +106,7 @@ class CryptoTicker(commands.Cog):
     async def slash_basecurrency(self, ctx: SlashContext, new_base):
         await self.basecurrency(ctx, new_base)
 
-    @commands.command(name="basecurrency", pass_context=True)
+    @commands.command(name="basecurrency", pass_context=True, brief="Change base currency")
     async def command_basecurrency(self, ctx, new_base):
         await self.basecurrency(ctx, new_base)
 
@@ -114,7 +114,7 @@ class CryptoTicker(commands.Cog):
     async def slash_price(self, ctx: SlashContext, ticker, base=None):
         await self.price(ctx, ticker, base)
 
-    @commands.command(name="price", pass_context=True)
+    @commands.command(name="price", pass_context=True, brief="Check price of selected crypto")
     async def command_price(self, ctx, ticker, base=None):
         await self.price(ctx, ticker, base)
 

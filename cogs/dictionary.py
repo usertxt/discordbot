@@ -19,14 +19,14 @@ class Dictionary(commands.Cog):
         search_term = search_term.replace(' ', '+')
         response = self.dict_url + search_term
         await ctx.send(response)
-        logging.info(f'[Dictionary Prompted]: {search_term}')
+        logging.info(f'[Dictionary Prompted]: {ctx.author} {search_term}')
         logging.info(f'[Dictionary Returned]: {response}')
 
     async def urban(self, ctx, search_term):
         search_term_url = search_term.replace(' ', '+')
         definition = requests.get(self.api_url + search_term_url).json()
         definition = definition['list'][0]['definition']
-        logging.info(f'[Dictionary Prompted]: {search_term}')
+        logging.info(f'[Dictionary Prompted]: {ctx.author} {search_term}')
 
         try:
             e = discord.Embed()
@@ -47,7 +47,7 @@ class Dictionary(commands.Cog):
     async def slash_dict(self, ctx: SlashContext, search_term):
         await self.dict(ctx, search_term)
 
-    @commands.command(name="dict", pass_context=True)
+    @commands.command(name="dict", pass_context=True, brief="Definitions from Merriam-Webster")
     async def command_dict(self, ctx, search_term):
         await self.dict(ctx, search_term)
 
@@ -55,7 +55,8 @@ class Dictionary(commands.Cog):
     async def slash_urban(self, ctx: SlashContext, search_term):
         await self.urban(ctx, search_term)
 
-    @commands.command(name="urban", pass_context=True)
+    @commands.command(name="urban", pass_context=True, brief="Definitions from Urban Dictionary",
+    description="Use quotes when searching for a phrase using the prefix command - Example: !urban \"search phrase\"")
     async def command_urban(self, ctx, search_term):
         await self.urban(ctx, search_term)
 
