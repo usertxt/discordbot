@@ -1,7 +1,8 @@
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
 import requests
-import asyncio
 import logging
+import json
 
 
 class StockTicker(commands.Cog):
@@ -10,24 +11,27 @@ class StockTicker(commands.Cog):
         self.config = self.bot.config["STOCKTICKER"]
         self.key = self.config["API_KEY"]
         self.url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='
+    
+    guild_ids = json.load(open("config.json"))["DISCORD"]["GUILD_IDS"]
 
-    @commands.command(pass_context=True)
-    async def quote(self, ctx, stock_ticker):
-        response = requests.get(self.url + stock_ticker + '&apikey=' + self.key).json()
+    async def quote(self, ctx, ticker):
+        response = requests.get(self.url + ticker + '&apikey=' + self.key).json()
         price = float(response['Global Quote']['05. price'])
-        logging.info(f'[StockTicker Prompted]: {ctx.message.author}: {stock_ticker}')
+        logging.info(f'[StockTicker Prompted]: {ctx.author}: {ticker}')
         try:
-            async with ctx.typing():
-                await asyncio.sleep(1)
-                await ctx.send(f"{stock_ticker.upper()}: ${price:,.2f}")
-                logging.info(f"[StockTicker Returned]: {stock_ticker.upper()}: ${price:,.2f}")
-                await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
+            await ctx.send(f"{ticker.upper()}: ${price:,.2f}")
+            logging.info(f"[StockTicker Returned]: {ticker.upper()}: ${price:,.2f}")
         except Exception as e:
-            async with ctx.typing():
-                await asyncio.sleep(1)
-                await ctx.send(f'{e}')
-                logging.info(f'[StockTicker Error]: {e}')
-                await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
+            await ctx.send(f'{e}')
+            logging.info(f'[StockTicker Error]: {e}')
+
+    @cog_ext.cog_slash(name="quote", description="Get stock quotes", guild_ids=guild_ids)
+    async def slash_quote(self, ctx: SlashContext, ticker):
+        await self.quote(ctx, ticker)
+
+    @commands.command(name="quote", pass_context=True, brief="Get stock quotes")
+    async def command_quote(self, ctx, ticker):
+        await self.quote(ctx, ticker)
 
 
 def setup(bot):
