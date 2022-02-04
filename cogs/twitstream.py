@@ -1,7 +1,5 @@
 from discord.ext import commands
-from discord.ext.commands.bot import Bot
 from discord_slash import cog_ext, SlashContext
-from discord_slash.client import SlashCommand
 from twitter import *
 import asyncio
 import logging
@@ -32,7 +30,6 @@ class TwitStream(commands.Cog):
 
         if int(count) > 150:
             await ctx.send('[TwitStream Error]: Too many tweets requested')
-            await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
         else:
             num = int(count) - 1
             data = self.t.statuses.user_timeline(screen_name=screen_name, count=count, tweet_mode="extended")
