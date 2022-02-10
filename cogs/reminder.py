@@ -16,7 +16,7 @@ class Reminder(commands.Cog):
 
         if 's' in duration:
             duration = int(duration.replace('s', ''))
-            if slash_check is True:
+            if slash_check:
                 await ctx.send(f'Reminding you in {duration} seconds to {message}', hidden=True)
             else:
                 await ctx.send(f'Reminding you in {duration} seconds to {message}')
@@ -24,7 +24,7 @@ class Reminder(commands.Cog):
             await ctx.author.send(f'This is a reminder to {message}')
         elif 'm' in duration:
             duration = int(duration.replace('m', '')) * 60
-            if slash_check is True:
+            if slash_check:
                 await ctx.send(f'Reminding you in {duration / 60} minutes to {message}', hidden=True)
             else:
                 await ctx.send(f'Reminding you in {duration / 60} minutes to {message}')
@@ -32,7 +32,7 @@ class Reminder(commands.Cog):
             await ctx.author.send(f'This is a reminder to {message}')
         elif 'h' in duration:
             duration = int(duration.replace('h', '')) * 3600
-            if slash_check is True:
+            if slash_check:
                 await ctx.send(f'Reminding you in {duration / 3600} hours to {message}', hidden=True)
             else:
                 await ctx.send(f'Reminding you in {duration / 3600} hours to {message}')
