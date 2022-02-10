@@ -35,7 +35,7 @@ class Dictionary(commands.Cog):
             elif len(definition) < 1024:
                 e.add_field(name=search_term, value=definition.replace("[", "").replace("]",""))
             e.set_thumbnail(url='https://d2gatte9o95jao.cloudfront.net/assets/apple-touch-icon-1734beeaa059fbc5587bddb3001a0963670c6de8767afb6c67d88d856b0c0dad.png')
-            e.add_field(name='\u200b', value=self.urban_url + search_term_url)
+            e.add_field(name='\u200b', value=self.urban_url + search_term_url, inline=False)
 
             await ctx.send(embed=e)
             logging.info(f'[Dictionary Returned]: Embed response for {self.api_url + search_term_url}')
