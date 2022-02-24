@@ -34,15 +34,20 @@ class TwitStream(commands.Cog):
             num = int(count) - 1
             data = self.t.statuses.user_timeline(screen_name=screen_name, count=count, tweet_mode="extended")
             twit_id = data[num]['id']
+            corrected_screen_name = data[num]['user']['screen_name']
 
-            await ctx.send(f'https://twitter.com/{screen_name}/status/{twit_id}')
-            logging.info(f'[TwitStream Returned]: https://twitter.com/{screen_name}/status/{twit_id}')
+            if 'retweeted_status' in data[num]:
+                corrected_screen_name = data[num]['retweeted_status']['user']['screen_name']
+                twit_id = data[num]['retweeted_status']['id']
+            
+            await ctx.send(f'https://twitter.com/{corrected_screen_name}/status/{twit_id}')
+            logging.info(f'[TwitStream Returned]: https://twitter.com/{corrected_screen_name}/status/{twit_id}')
 
             while data[num]['full_text'].endswith('...'):
                 num -= 1
                 twit_id = data[num]['id']
-                await ctx.send(f'https://twitter.com/{screen_name}/status/{twit_id}')
-                logging.info(f'[TwitStream Returned]: https://twitter.com/{screen_name}/status/{twit_id}')
+                await ctx.send(f'https://twitter.com/{corrected_screen_name}/status/{twit_id}')
+                logging.info(f'[TwitStream Returned]: https://twitter.com/{corrected_screen_name}/status/{twit_id}')
 
             if "https://t.co" in data[num]['full_text'] and data[num]['entities'].get('media') is None:
                 url = re.search("(?P<url>https?://[^\s]+)", data[num]['full_text']).group("url")
