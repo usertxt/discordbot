@@ -26,21 +26,19 @@ class TwitStream(commands.Cog):
             count = 1
 
         if count == "rand":
-            count = random.randint(0, 50)
+            count = random.randint(1, 149)
 
-        if int(count) > 150:
-            await ctx.send('[TwitStream Error]: Too many tweets requested')
-        else:
+        if int(count) < 150:
             num = int(count) - 1
             data = self.t.statuses.user_timeline(screen_name=screen_name, count=count, tweet_mode="extended")
             twit_id = data[num]['id']
             corrected_screen_name = data[num]['user']['screen_name']
 
             if 'retweeted_status' in data[num]:
-                corrected_screen_name = data[num]['retweeted_status']['user']['screen_name']
+                rt_screen_name = data[num]['retweeted_status']['user']['screen_name']
                 twit_id = data[num]['retweeted_status']['id']
-                await ctx.send(f'{screen_name} retweeted: https://twitter.com/{corrected_screen_name}/status/{twit_id}')
-                logging.info(f'[TwitStream Returned]: {screen_name} retweeted: https://twitter.com/{corrected_screen_name}/status/{twit_id}')
+                await ctx.send(f'{screen_name} retweeted: https://twitter.com/{rt_screen_name}/status/{twit_id}')
+                logging.info(f'[TwitStream Returned]: {corrected_screen_name} retweeted: https://twitter.com/{rt_screen_name}/status/{twit_id}')
             else:
                 await ctx.send(f'https://twitter.com/{corrected_screen_name}/status/{twit_id}')
                 logging.info(f'[TwitStream Returned]: https://twitter.com/{corrected_screen_name}/status/{twit_id}')
@@ -56,6 +54,8 @@ class TwitStream(commands.Cog):
                 url = re.search("(?P<url>https?://[^\s]+)", data[num]['full_text']).group("url")
                 await asyncio.sleep(3)
                 await ctx.send(url)
+        else:
+            await ctx.send('[TwitStream Error]: Too many tweets requested')
 
     @cog_ext.cog_slash(name="twit", description="Get tweets by Twitter username", guild_ids=guild_ids)
     async def slash_twit(self, ctx: SlashContext, screen_name, count=None):
