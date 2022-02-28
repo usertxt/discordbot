@@ -37,7 +37,7 @@ class TwitStream(commands.Cog):
             if 'retweeted_status' in data[num]:
                 rt_screen_name = data[num]['retweeted_status']['user']['screen_name']
                 twit_id = data[num]['retweeted_status']['id']
-                await ctx.send(f'{screen_name} retweeted: https://twitter.com/{rt_screen_name}/status/{twit_id}')
+                await ctx.send(f'{corrected_screen_name} retweeted: https://twitter.com/{rt_screen_name}/status/{twit_id}')
                 logging.info(f'[TwitStream Returned]: {corrected_screen_name} retweeted: https://twitter.com/{rt_screen_name}/status/{twit_id}')
             else:
                 await ctx.send(f'https://twitter.com/{corrected_screen_name}/status/{twit_id}')
