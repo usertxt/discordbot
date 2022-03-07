@@ -96,11 +96,19 @@ class TwitStream(commands.Cog):
         if result_type in result_type_options:
             num = 0
             data = self.t.search.tweets(q=search_term, lang="en", result_type=result_type, count=1)
+
             if data["statuses"] == []:
                 logging.info(f"[TwitStream]: No results found for \"{search_term}\"")
                 return await ctx.send(f"[TwitStream]: No results found for \"{search_term}\"")
+
             twit_id = data["statuses"][num]["id"]
             screen_name = data["statuses"][num]["user"]["screen_name"]
+
+            if "retweeted_status" in data["statuses"][num].keys():
+                retweet_id = data["statuses"][num]["retweeted_status"]
+                twit_id = retweet_id["id"]
+                screen_name = retweet_id["user"]["screen_name"]
+                
             reply_check_id = data["statuses"][num]["in_reply_to_status_id"]
 
             if type(reply_check_id) is int:
