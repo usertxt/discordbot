@@ -85,8 +85,8 @@ class TwitStream(commands.Cog):
             await ctx.send("[TwitStream Error]: Too many tweets requested")
             logging.info("[TwitStream Error]: Too many tweets requested")
 
-    async def twitsearch(self, ctx, search_term, result_type=None):
-        logging.info(f"[TwitStream Prompted]: {ctx.author} twitsearch {search_term} {result_type}")
+    async def searchtwit(self, ctx, search_term, result_type=None):
+        logging.info(f"[TwitStream Prompted]: {ctx.author} searchtwit {search_term} {result_type}")
 
         result_type_options = ["mixed", "recent", "popular"]
 
@@ -148,13 +148,13 @@ class TwitStream(commands.Cog):
     async def command_twit(self, ctx, screen_name, count=None):
         await self.twit(ctx, screen_name, count)
 
-    @cog_ext.cog_slash(name="twitsearch", description="Search tweets - result_type options are popular (default), mixed, or recent", guild_ids=guild_ids)
-    async def slash_twitsearch(self, ctx: SlashContext, search_term, result_type=None):
-        await self.twitsearch(ctx, search_term, result_type)
+    @cog_ext.cog_slash(name="searchtwit", description="Search tweets - result_type options are popular (default), mixed, or recent", guild_ids=guild_ids)
+    async def slash_searchtwit(self, ctx: SlashContext, search_term, result_type=None):
+        await self.searchtwit(ctx, search_term, result_type)
 
-    @commands.command(name="twitsearch", pass_context=True, brief="Search tweets")
-    async def command_twitsearch(self, ctx, search_term, result_type=None):
-        await self.twitsearch(ctx, search_term, result_type)
+    @commands.command(name="searchtwit", pass_context=True, brief="Search tweets")
+    async def command_searchtwit(self, ctx, search_term, result_type=None):
+        await self.searchtwit(ctx, search_term, result_type)
 
 
 def setup(bot):
